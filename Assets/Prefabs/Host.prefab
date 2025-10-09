@@ -900,7 +900,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4d186152fce4b8098127ef9d3285812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderers: []
+  renderers:
+  - {fileID: 7428366908414957073}
+--- !u!137 &7428366908414957073 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2288077689227711022, guid: 30da35b47219e274098685b50d4d0564, type: 3}
+  m_PrefabInstance: {fileID: 8707215999247385663}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8365250492215867758 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 30da35b47219e274098685b50d4d0564, type: 3}

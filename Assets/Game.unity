@@ -1738,11 +1738,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &1306762857 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7428366908414957073, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
-  m_PrefabInstance: {fileID: 2982834953295086916}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1513438804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2123,14 +2118,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6782999263513752916, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
-      propertyPath: renderers.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6782999263513752916, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
-      propertyPath: 'renderers.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1306762857}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
