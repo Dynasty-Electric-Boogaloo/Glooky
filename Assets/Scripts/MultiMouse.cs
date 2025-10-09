@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-//TODO Change "invalid" mouse handle value from IntPtr.Zero to -1
-//Use (IntPtr)(-1) to represent the value
-
 public class MultiMouse : MonoBehaviour
 {
     private static MultiMouse _instance;
@@ -25,11 +22,12 @@ public class MultiMouse : MonoBehaviour
         public Button Left;
     }
     
+    public UnityEvent<int> onMouseSpawn = new();
+    public UnityEvent<int> onMouseDespawn = new();
+    
     private readonly object _lock = new();
     private MouseData[] _miceData;
     private Stack<int> _spawnedMice = new();
-
-    public UnityEvent<int> onMouseSpawn = new();
 
     private void Awake()
     {
@@ -48,6 +46,11 @@ public class MultiMouse : MonoBehaviour
         lock (_lock)
         {
             _miceData = new MouseData[RawInput.Instance.MiceCount];
+
+            for (var i = 0; i < RawInput.Instance.MiceCount; i++)
+            {
+                _miceData[i].MouseHandle = (IntPtr)(-1);
+            }
         }
     }
 
@@ -124,7 +127,7 @@ public class MultiMouse : MonoBehaviour
 
             if (index < 0 && (input.mouse.buttons.usButtonFlags & Win32.RI_MOUSE_LEFT_BUTTON_DOWN) != 0)
             {
-                index = Array.FindIndex(_miceData, x => x.MouseHandle == IntPtr.Zero);
+                index = Array.FindIndex(_miceData, x => x.MouseHandle == (IntPtr)(-1));
                 
                 if (index >= 0)
                 {
@@ -180,9 +183,11 @@ public class MultiMouse : MonoBehaviour
 
             if (index < 0)
                 return;
+            
+            onMouseDespawn?.Invoke(index);
 
             ref var mouse = ref _miceData[index];
-            mouse.MouseHandle = IntPtr.Zero;
+            mouse.MouseHandle = (IntPtr)(-1);
         }
     }
 }

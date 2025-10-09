@@ -115,6 +115,21 @@ MonoBehaviour:
   chainLinkPrefab: {fileID: 5371875214798350826, guid: ef1d3447c45a7a042b759e91915a3a56, type: 3}
   modelTransform: {fileID: 947173205646771535}
   animator: {fileID: 2807855694321835685}
+  onPlayerChange:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6782999263513752916}
+        m_TargetAssemblyTypeName: Colorizer, Assembly-CSharp
+        m_MethodName: SetPlayerIndex
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8689010022526074549
 GameObject:
   m_ObjectHideFlags: 0

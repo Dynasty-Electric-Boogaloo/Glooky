@@ -35,7 +35,6 @@ public class CursorController : MonoBehaviour
     [SerializeField] private AudioSource clickSound;
 
     public UnityEvent onClick;
-    //TODO Use onPlayerChange rather than a direct reference to Colorizer
     public UnityEvent<int> onPlayerChange;
 
     private Material _baseMaterial;
@@ -56,18 +55,25 @@ public class CursorController : MonoBehaviour
         Cursor.visible = false;
 
         if (startHost != null)
-        {
-            //TODO extract this to a public AssignHost function
-            //This way we can call this externally and decouple stuff
-            startHost.Capture(this);
-            _host = startHost;
-        }
+            AssignHost(startHost);
+        
+        onPlayerChange?.Invoke(-1);
+    }
+
+    private void OnEnable()
+    {
+        MultiMouse.Instance.onMouseSpawn.AddListener(OnMouseSpawn);
+        MultiMouse.Instance.onMouseDespawn.AddListener(OnMouseDespawn);
+    }
+
+    private void OnDisable()
+    {
+        MultiMouse.Instance?.onMouseSpawn.RemoveListener(OnMouseSpawn);
+        MultiMouse.Instance?.onMouseDespawn.RemoveListener(OnMouseDespawn);
     }
 
     private void Update()
     {
-        colorizer.SetPlayerIndex(GetPlayerIndex());
-
         MultiMouse.MouseData mouseData = MultiMouse.Instance.GetMouseData(mouseIndex);
 
         if (mouseData.Left.Pressed)
@@ -108,8 +114,17 @@ public class CursorController : MonoBehaviour
         if (_host)
             transform.position = _host.RestrainCursorPosition();
     }
+
+    public void AssignHost(Host host)
+    {
+        if (_host)
+            _host.Release();
+        
+        host.Capture(this);
+        _host = host;
+    }
     
-    public void EjectFromKnight()
+    public void EjectFromHost()
     {
         _host = null;
     }
@@ -118,9 +133,7 @@ public class CursorController : MonoBehaviour
     {
         if (mouseIndex >= 0)
         {
-            //TODO Change "invalid" mouse handle value from IntPtr.Zero to -1
-            //Use (IntPtr)(-1) to represent the value
-            if (MultiMouse.Instance.GetMouseData(mouseIndex).MouseHandle == IntPtr.Zero)
+            if (MultiMouse.Instance.GetMouseData(mouseIndex).MouseHandle == (IntPtr)(-1))
                 return -1;
         }
         
@@ -132,7 +145,7 @@ public class CursorController : MonoBehaviour
         return chainEndTransform;
     }
 
-    public Host GetKnight()
+    public Host GetHost()
     {
         return _host;
     }
@@ -147,7 +160,7 @@ public class CursorController : MonoBehaviour
             return;
         
         var closestDistance = interactionRange;
-        Collider closestCollider = null;
+        IClickable clickable = null;
         for (var i = 0; i < count; i++)
         {
             if (_interactionColliders[i].gameObject == gameObject)
@@ -159,43 +172,14 @@ public class CursorController : MonoBehaviour
             var distance = Vector3.Distance(interactionPoint.position,
                 _interactionColliders[i].ClosestPoint(interactionPoint.position));
 
-            if (distance < closestDistance)
+            if (distance < closestDistance && _interactionColliders[i].TryGetComponent(out IClickable newClosestClickable))
             {
                 closestDistance = distance;
-                closestCollider = _interactionColliders[i];
+                clickable = newClosestClickable;
             }
         }
 
-        if (!closestCollider)
-            return;
-
-        //TODO Check if colliders have a IClickable component BEFORE choosing a closest one
-        var clickable = closestCollider.GetComponent<IClickable>();
-
-        if (clickable == null)
-            return;
-
-        //TODO Make this less reliant on the actual type behind the clickable object?
-        //Or maybe this is actually fine if we just keep it to general types like Host and Interactable?
-        switch (clickable.GetClickableType())
-        {
-            case ClickableType.Avatar:
-                var knight = closestCollider.GetComponent<Host>();
-
-                if (knight == null)
-                {
-                    return;
-                }
-
-                if (_host)
-                    _host.Release();
-
-                clickable.Click(this);
-                _host = knight;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        clickable?.Click(this);
     }
 
     private void GroundCheck()
@@ -221,5 +205,17 @@ public class CursorController : MonoBehaviour
             return movementSpeed * 2;
 
         return movementSpeed;
+    }
+
+    private void OnMouseSpawn(int playerIndex)
+    {
+        if (playerIndex == mouseIndex)
+            onPlayerChange?.Invoke(playerIndex);
+    }
+
+    private void OnMouseDespawn(int playerIndex)
+    {
+        if (playerIndex == mouseIndex)
+            onPlayerChange?.Invoke(-1);
     }
 }
