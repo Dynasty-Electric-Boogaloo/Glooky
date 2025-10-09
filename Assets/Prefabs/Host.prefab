@@ -105,7 +105,7 @@ MonoBehaviour:
   groundCheckLength: 1.5
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   hoverHeight: 1
   chainLength: 3
   restrainDistance: 6

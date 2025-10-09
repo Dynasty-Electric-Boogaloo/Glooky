@@ -1738,6 +1738,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &1306762857 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7428366908414957073, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
+  m_PrefabInstance: {fileID: 2982834953295086916}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1513438804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1756,7 +1761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1276674867635883759, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_Name
-      value: Knight (2)
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 3151027163188014420, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1851,6 +1856,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2442204847619400538, guid: f8824f019be27fe4ab4bc3edc0d9136f, type: 3}
+      propertyPath: startHost
+      value: 
+      objectReference: {fileID: 1891860626}
     - target: {fileID: 2442204847619400538, guid: f8824f019be27fe4ab4bc3edc0d9136f, type: 3}
       propertyPath: mouseIndex
       value: 1
@@ -1993,7 +2002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1276674867635883759, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_Name
-      value: Knight (1)
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 3151027163188014420, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2072,7 +2081,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1276674867635883759, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_Name
-      value: Knight
+      value: Host
       objectReference: {fileID: 0}
     - target: {fileID: 3151027163188014420, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2114,6 +2123,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6782999263513752916, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
+      propertyPath: renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782999263513752916, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
+      propertyPath: 'renderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1306762857}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2167,6 +2184,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2442204847619400538, guid: f8824f019be27fe4ab4bc3edc0d9136f, type: 3}
+      propertyPath: startHost
+      value: 
+      objectReference: {fileID: 2088340152}
     - target: {fileID: 2442204847619400538, guid: f8824f019be27fe4ab4bc3edc0d9136f, type: 3}
       propertyPath: startKnight
       value: 
