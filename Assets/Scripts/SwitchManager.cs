@@ -11,9 +11,9 @@ public class SwitchManager : MonoBehaviour
     private static SwitchManager _instance;
     public static SwitchManager Instance => _instance;
     
-    public BitArray128 globalSwitch = new();
+    private BitArray128 _switches = new();
 
-    public UnityEvent<BitArray128> onSwitchCalled = new();
+    public UnityEvent<bool>[] onSwitchCalled = new UnityEvent<bool>[128];
     
     private void Awake()
     {
@@ -26,25 +26,41 @@ public class SwitchManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(_instance);
     }
-    
-    public void SwitchOnAt(params uint[] indices)
-    {
-        foreach (var i in indices)
-            globalSwitch[i] = true;
 
-        onSwitchCalled?.Invoke(globalSwitch);
+    public static void AddListenerOnChannel(UnityAction<bool> call, uint channel)
+    {
+        if (channel >= _instance.onSwitchCalled.Length)
+        {
+            Debug.LogWarning($"Invalid channel {channel}");
+            return;
+        }
+
+        _instance.onSwitchCalled[channel].AddListener(call);
     }
     
-    public void SwitchOffAt(params uint[] indices)
+    public static void RemoveListenerOnChannel(UnityAction<bool> call, uint channel)
     {
-        foreach (var i in indices)
-            globalSwitch[i] = false;
+        if (channel >= _instance.onSwitchCalled.Length)
+            return;
 
-        onSwitchCalled?.Invoke(globalSwitch);
+        _instance.onSwitchCalled[channel].RemoveListener(call);
     }
     
-    public void ResetGlobalSwitch()
+    public bool GetSwitch(uint index)
     {
-        globalSwitch = new BitArray128();
+        return _switches[index];
+    }
+    
+    public void SetSwitch(uint index, bool value)
+    {
+        _switches[index] = value;
+
+        if (index < onSwitchCalled.Length)
+            onSwitchCalled[index]?.Invoke(value);
+    }
+    
+    public void ResetSwitches()
+    {
+        _switches = new BitArray128();
     }
 }
