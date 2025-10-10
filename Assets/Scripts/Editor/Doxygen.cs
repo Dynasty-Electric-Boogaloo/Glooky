@@ -6,12 +6,13 @@ using Debug = UnityEngine.Debug;
 
 namespace Editor
 {
-    [InitializeOnLoad]
+    /// Static tool class to handle Doxygen interaction.
     public static class Doxygen
     {
         private const string MenuName = "Tools/Doxygen/Auto-Refresh";
         private const string SettingName = "Tools_Doxygen_Auto-Refresh";
-        public static bool AutoRefreshEnabled
+
+        private static bool AutoRefreshEnabled
         {
             get => EditorPrefs.GetBool(SettingName, true);
             set => EditorPrefs.SetBool(SettingName, value);
@@ -30,8 +31,6 @@ namespace Editor
             var workingDirectory = Directory.GetParent($"{Application.dataPath}/../Docs/html/");
             if (workingDirectory == null)
                 return;
-            
-            Debug.Log(workingDirectory.FullName);
             
             var processInfo = new ProcessStartInfo
             {
@@ -54,11 +53,7 @@ namespace Editor
                 FileName = "powershell.exe",
                 Arguments = "-command \"doxygen Docs.doxy\"",
                 WorkingDirectory = workingDirectory.FullName,
-                //UseShellExecute = false,
-                //RedirectStandardError = true,
-                //RedirectStandardInput = true,
-                //RedirectStandardOutput = true,
-                //ErrorDialog = false,
+                CreateNoWindow = false
             };
             
             Process.Start(processInfo);

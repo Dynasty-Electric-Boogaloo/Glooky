@@ -1,8 +1,8 @@
-﻿using System;
-using DefaultNamespace;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
+/// Basic implementation of Host
+/// TODO Document further
 public class Host : MonoBehaviour, IClickable
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -78,7 +78,7 @@ public class Host : MonoBehaviour, IClickable
     
     public void Capture(CursorController cursor)
     {
-        if (_cursor != null)
+        if (!_cursor)
         {
             _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
             _cursor.EjectFromHost();

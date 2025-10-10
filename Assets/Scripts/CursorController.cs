@@ -1,10 +1,9 @@
 using System;
-using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
+/// Basic implementation of CursorController
+/// TODO Document further
 public class CursorController : MonoBehaviour
 {
     [SerializeField] private int mouseIndex;

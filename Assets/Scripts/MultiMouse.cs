@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// Multiple Mouse Management Singleton
+/// TODO Document further
 public class MultiMouse : MonoBehaviour
 {
     private static MultiMouse _instance;
