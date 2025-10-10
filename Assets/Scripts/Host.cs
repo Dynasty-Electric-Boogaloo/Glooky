@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Host : MonoBehaviour, IClickable
 {
@@ -28,12 +29,11 @@ public class Host : MonoBehaviour, IClickable
     [SerializeField] private Transform modelTransform;
     [SerializeField] private Animator animator;
 
+    public UnityEvent<int> onPlayerChange;
+
     private Transform[] _chainLinks;
 
     private CursorController _cursor;
-    //TODO Try and add Colorizer.SetPlayerIndex listeners to a onPlayerChange event newly declared in this object
-    //This way we only reference the chain link Colorizer components once, and don't have to store them
-    private Colorizer[] _colorizers;
     private Rigidbody _rigidbody;
     private float _verticalVelocity;
     private Vector3 _pullForce;
@@ -48,104 +48,46 @@ public class Host : MonoBehaviour, IClickable
         {
             _chainLinks[i] = Instantiate(chainLinkPrefab, transform);
             _chainLinks[i].gameObject.SetActive(false);
+            onPlayerChange.AddListener(_chainLinks[i].GetComponentInChildren<Colorizer>().SetPlayerIndex);
         }
-    }
-
-    private void Start()
-    {
-        //TODO Remove this, c.f. the comment further up
-        _colorizers = transform.GetComponentsInChildren<Colorizer>(true);
+        
+        onPlayerChange?.Invoke(-1);
     }
 
     private void Update()
     {
-        //TODO Replace this by an invocation of onPlayerChange
-        foreach (var colorizer in _colorizers)
-        {
-            colorizer.SetPlayerIndex(_cursor != null ? _cursor.GetPlayerIndex() : -1);
-        }
-
-        if (_cursor == null)
-        {
-            UpdateAnimator();
-            return;
-        }
-
-        //Extract this out to an UpdateChainPosition function, and reorder the Update function to avoid
-        //The two UpdateAnimator calls.
-        var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
-        var chainSlack = chainSlackHeight * Mathf.Clamp01(1 - diff.magnitude / chainLength);
-
-        for (var i = 0; i < _chainLinks.Length; i++)
-        {
-            var factor = (i + .5f) / _chainLinks.Length;
-            var position = chainHolderTransform.position + diff * factor + Vector3.down * (chainSlack * Mathf.Sin(factor * Mathf.PI));
-            _chainLinks[i].position = position;
-        }
-
         UpdateAnimator();
+
+        if (_cursor != null)
+            UpdateChainPosition();
     }
 
-    //TODO Find a way to reduce the amount of Slowdown calls
     private void FixedUpdate()
     {
         GroundCheck();
-        
-        if (_cursor)
-        {
-            //TODO Extract this to a UpdatePullForce function
-            var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
 
-            if (diff.magnitude > chainLength)
-            {
-                _pullForce = (diff - diff.normalized * chainLength) * movementSpeed;
-                var magnitude = _pullForce.magnitude;
-                _pullForce.y = 0;
-                _pullForce = _pullForce.normalized * magnitude;
-            }
-            else
-            {
-                Slowdown();
-            }
+        var diff = _cursor ? _cursor.GetChainEndTransform().position - chainHolderTransform.position : Vector3.zero;
 
-            //TODO extract this to a UpdateDirection function
-            if (diff.magnitude > 0.1f)
-            {
-                var direction = diff;
-                direction.y = 0;
-                direction.Normalize();
-            
-                modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, turnSpeed * Time.fixedDeltaTime);
-            }
-        }
-        else
-        {
-            Slowdown();
-        }
+        UpdatePullForce(diff);
+
+        if (diff.magnitude > 0.1f)
+            UpdateDirection(diff);
         
         _rigidbody.linearVelocity = new Vector3(_pullForce.x, _verticalVelocity, _pullForce.z);
-    }
-
-    private void Slowdown()
-    {
-        _pullForce = Vector3.Lerp(_pullForce, Vector3.zero, slowDownSpeed * Time.fixedDeltaTime);
-    }
-
-    private void UpdateAnimator()
-    {
-        animator.SetFloat(Speed, _pullForce.magnitude);
-        _timer += _pullForce.magnitude * Time.deltaTime;
-        _timer %= 4;
-
-        animator.transform.localEulerAngles = new Vector3(_pullForce.magnitude, 0, Mathf.Sin(_timer / 2 * Mathf.PI) * _pullForce.magnitude / 2);
     }
     
     public void Capture(CursorController cursor)
     {
         if (_cursor != null)
-            _cursor.EjectFromKnight();
-        
+        {
+            _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
+            _cursor.EjectFromHost();
+        }
+            
         _cursor = cursor;
+        _cursor.onPlayerChange.AddListener(OnPlayerChange);
+        
+        OnPlayerChange(_cursor.GetPlayerIndex());
 
         foreach (var chainLink in _chainLinks)
         {
@@ -156,37 +98,26 @@ public class Host : MonoBehaviour, IClickable
 
     public void Release()
     {
+        _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
         _cursor = null;
+        
+        OnPlayerChange(-1);
         
         foreach (var chainLink in _chainLinks)
         {
             chainLink.gameObject.SetActive(false);
         }
     }
-
-    private void GroundCheck()
-    {
-        var ray = new Ray(_rigidbody.position, Vector3.down);
-
-        if (!Physics.Raycast(ray, out var hit, groundCheckLength, groundMask))
-        {
-            _verticalVelocity = Mathf.Max(_verticalVelocity + gravity * Time.fixedDeltaTime, maxFallSpeed);
-            return;
-        }
-        
-        _verticalVelocity = 0;
-        _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
-    }
-
+    
     public bool Click(CursorController controller)
     {
-        Capture(controller);
+        controller.AssignHost(this);
         return true;
     }
 
     public ClickableType GetClickableType()
     {
-        return ClickableType.Avatar;
+        return ClickableType.Host;
     }
 
     public bool IsCursorInRange()
@@ -204,5 +135,74 @@ public class Host : MonoBehaviour, IClickable
         var position = transform.position + diff.normalized * restrainDistance;
         position.y = _cursor.transform.position.y;
         return position;
+    }
+
+    private void GroundCheck()
+    {
+        var ray = new Ray(_rigidbody.position, Vector3.down);
+
+        if (!Physics.Raycast(ray, out var hit, groundCheckLength, groundMask))
+        {
+            _verticalVelocity = Mathf.Max(_verticalVelocity + gravity * Time.fixedDeltaTime, maxFallSpeed);
+            return;
+        }
+        
+        _verticalVelocity = 0;
+        _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
+    }
+    
+    private void UpdatePullForce(Vector3 diff)
+    {
+        if (diff.magnitude > chainLength)
+        {
+            _pullForce = (diff - diff.normalized * chainLength) * movementSpeed;
+            var magnitude = _pullForce.magnitude;
+            _pullForce.y = 0;
+            _pullForce = _pullForce.normalized * magnitude;
+        }
+        else
+        {
+            Slowdown();
+        }
+    }
+
+    private void UpdateDirection(Vector3 direction)
+    {
+        direction.y = 0;
+        direction.Normalize();
+            
+        modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, turnSpeed * Time.fixedDeltaTime);
+    }
+
+    private void Slowdown()
+    {
+        _pullForce = Vector3.Lerp(_pullForce, Vector3.zero, slowDownSpeed * Time.fixedDeltaTime);
+    }
+
+    private void UpdateAnimator()
+    {
+        animator.SetFloat(Speed, _pullForce.magnitude);
+        _timer += _pullForce.magnitude * Time.deltaTime;
+        _timer %= 4;
+
+        animator.transform.localEulerAngles = new Vector3(_pullForce.magnitude, 0, Mathf.Sin(_timer / 2 * Mathf.PI) * _pullForce.magnitude / 2);
+    }
+
+    private void UpdateChainPosition()
+    {
+        var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
+        var chainSlack = chainSlackHeight * Mathf.Clamp01(1 - diff.magnitude / chainLength);
+
+        for (var i = 0; i < _chainLinks.Length; i++)
+        {
+            var factor = (i + .5f) / _chainLinks.Length;
+            var position = chainHolderTransform.position + diff * factor + Vector3.down * (chainSlack * Mathf.Sin(factor * Mathf.PI));
+            _chainLinks[i].position = position;
+        }
+    }
+
+    private void OnPlayerChange(int playerIndex)
+    {
+        onPlayerChange?.Invoke(playerIndex);
     }
 }

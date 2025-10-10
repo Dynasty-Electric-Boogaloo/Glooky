@@ -23,19 +23,13 @@ public class MaterialColorManager : MonoBehaviour
 
     public Material ColorizeMaterial(Material material, int playerIndex)
     {
-        //TODO Remove braces on single line condition blocks
-        
         if (playerIndex < 0 || playerIndex >= playerColors.Length)
-        {
             playerIndex = -1;
-        }
 
         playerIndex++;
 
         if (_materialCache.ContainsKey((playerIndex, material)))
-        {
             return _materialCache[(playerIndex, material)];
-        }
             
         var colorized = new Material(material)
         {

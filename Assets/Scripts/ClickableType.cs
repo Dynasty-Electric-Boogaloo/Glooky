@@ -2,6 +2,7 @@
 {
     public enum ClickableType
     {
-        Avatar
+        Host,
+        Interactable,
     }
 }
