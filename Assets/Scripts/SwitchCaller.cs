@@ -5,11 +5,12 @@ using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
-// To be used for testing
+/// TEST CLASS
 [HideMonoScript]
 public class SwitchCaller : MonoBehaviour
 {
-    public uint switchAt;
+    
+    [SerializeField, HideInInspector] public uint switchAt;
     
     [Button(ButtonSizes.Large, "Call Switch On")]
     private void OnSwitchOn()

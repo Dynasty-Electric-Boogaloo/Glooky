@@ -12,7 +12,8 @@ public class SwitchManager : MonoBehaviour
     public static SwitchManager Instance => _instance;
     
     private BitArray128 _switches = new();
-
+    
+    //TODO passer le channel en argument <bool, int>
     public UnityEvent<bool>[] onSwitchCalled = new UnityEvent<bool>[128];
     
     private void Awake()
@@ -29,6 +30,7 @@ public class SwitchManager : MonoBehaviour
 
     public static void AddListenerOnChannel(UnityAction<bool> call, uint channel)
     {
+        //TODO check if _instance is valid
         if (channel >= _instance.onSwitchCalled.Length)
         {
             Debug.LogWarning($"Invalid channel {channel}");
@@ -40,17 +42,20 @@ public class SwitchManager : MonoBehaviour
     
     public static void RemoveListenerOnChannel(UnityAction<bool> call, uint channel)
     {
+        //TODO check if _instance is valid
         if (channel >= _instance.onSwitchCalled.Length)
             return;
 
         _instance.onSwitchCalled[channel].RemoveListener(call);
     }
     
+    //TODO can make static
     public bool GetSwitch(uint index)
     {
         return _switches[index];
     }
     
+    //TODO check if _instance is valid and can make static
     public void SetSwitch(uint index, bool value)
     {
         _switches[index] = value;
@@ -61,6 +66,7 @@ public class SwitchManager : MonoBehaviour
     
     public void ResetSwitches()
     {
+        //TODO check if _instance is valid and can make static
         _switches = new BitArray128();
     }
 }
