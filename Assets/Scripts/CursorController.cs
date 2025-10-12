@@ -1,10 +1,9 @@
 using System;
-using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
+/// Basic implementation of CursorController
+// TODO Rework movement to be more physics based.
 public class CursorController : MonoBehaviour
 {
     [SerializeField] private int mouseIndex;
@@ -34,7 +33,10 @@ public class CursorController : MonoBehaviour
     [SerializeField] private ParticleSystem clickParticles;
     [SerializeField] private AudioSource clickSound;
 
+    /// Event called each time the player clicks the mouse, in any context.
     public UnityEvent onClick;
+    
+    /// Event called when the controller is paired to an input device, or when the latter gets disconnected.
     public UnityEvent<int> onPlayerChange;
 
     private Material _baseMaterial;
@@ -115,6 +117,8 @@ public class CursorController : MonoBehaviour
             transform.position = _host.RestrainCursorPosition();
     }
 
+    /// Sets the current attached Host of the CursorController, calls provided Host's Capture function.
+    /// <param name="host">Host to be captured by the mouse.</param>
     public void AssignHost(Host host)
     {
         if (_host)
@@ -124,11 +128,15 @@ public class CursorController : MonoBehaviour
         _host = host;
     }
     
+    /// Eject the CursorController from its Host, by Host demand.
+    /// @note Do not call this from somewhere other than Host code that properly handles the dissociation.
     public void EjectFromHost()
     {
         _host = null;
     }
-
+    
+    /// Get assigned player index, may be -1 if no player is assigned to the CursorController.
+    /// <returns>Player index value.</returns>
     public int GetPlayerIndex()
     {
         if (mouseIndex >= 0)
@@ -140,16 +148,21 @@ public class CursorController : MonoBehaviour
         return mouseIndex;
     }
 
+    /// Get the chain attachment point of the CursorController.
+    /// <returns>Chain attachment point Transform.</returns>
     public Transform GetChainEndTransform()
     {
         return chainEndTransform;
     }
 
+    /// Get the currently attached Host
+    /// <returns>The current host. The value can be null, make sure to check for it if you use this function.</returns>
     public Host GetHost()
     {
         return _host;
     }
 
+    /// Handle interactions with the environment, notably IClickable objects.
     private void Interact()
     {
         onClick?.Invoke();
@@ -182,6 +195,7 @@ public class CursorController : MonoBehaviour
         clickable?.Click(this);
     }
 
+    /// Handle ground alignment and gravity
     private void GroundCheck()
     {
         var ray = new Ray(_rigidbody.position, Vector3.down);
@@ -196,6 +210,7 @@ public class CursorController : MonoBehaviour
         _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
     }
 
+    /// Get the CursorController speed based on context like if the controller has an attached Host and/or is within range of it.
     private float ComputeSpeed()
     {
         if (!_host)
@@ -207,12 +222,16 @@ public class CursorController : MonoBehaviour
         return movementSpeed;
     }
 
+    /// Handle player connexion event.
+    /// <param name="playerIndex">The connected player index.</param>
     private void OnMouseSpawn(int playerIndex)
     {
         if (playerIndex == mouseIndex)
             onPlayerChange?.Invoke(playerIndex);
     }
 
+    /// Handle player disconnexion event.
+    /// <param name="playerIndex">The disconnected player index.</param>
     private void OnMouseDespawn(int playerIndex)
     {
         if (playerIndex == mouseIndex)
