@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 
 /// Basic implementation of Host
-/// TODO Document further
+// TODO Rework movement to be more physics based.
 public class Host : MonoBehaviour, IClickable
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
@@ -76,6 +76,9 @@ public class Host : MonoBehaviour, IClickable
         _rigidbody.linearVelocity = new Vector3(_pullForce.x, _verticalVelocity, _pullForce.z);
     }
     
+    /// Handle being captured by a CursorController.
+    /// <param name="cursor">CursorController that is connecting to this Host</param>
+    // TODO Handle cursor == null case.
     public void Capture(CursorController cursor)
     {
         if (!_cursor)
@@ -96,6 +99,7 @@ public class Host : MonoBehaviour, IClickable
         }
     }
 
+    /// Release Host from CursorController.
     public void Release()
     {
         _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
@@ -109,23 +113,33 @@ public class Host : MonoBehaviour, IClickable
         }
     }
     
+    /// Handle being clicked by a CursorController, effectively beginning the capturing process.
+    /// <param name="controller">CursorController that is capturing Host.</param>
+    /// <returns>Whether or not the interaction succeded.</returns>
     public bool Click(CursorController controller)
     {
         controller.AssignHost(this);
         return true;
     }
 
+    /// Get the Clickable interaction type.
+    /// <returns>Clickable interaction type.</returns>
     public ClickableType GetClickableType()
     {
         return ClickableType.Host;
     }
 
+    /// Check whether the connected CursorController is within the chain length of the Host.
+    /// <returns>Whether or not the CursorController is within the chain length of the Host.</returns>
+    // TODO Handle _cursor == null case.
     public bool IsCursorInRange()
     {
         var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
         return diff.magnitude < chainLength;
     }
     
+    /// Restrain the position of the connected CursorController to be within the chain length of the host.
+    /// <returns>Constrained CursorController position.</returns>
     public Vector3 RestrainCursorPosition()
     {
         var diff = _cursor.transform.position - transform.position;
@@ -137,6 +151,7 @@ public class Host : MonoBehaviour, IClickable
         return position;
     }
 
+    /// Handle ground alignment and gravity
     private void GroundCheck()
     {
         var ray = new Ray(_rigidbody.position, Vector3.down);
@@ -151,6 +166,9 @@ public class Host : MonoBehaviour, IClickable
         _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
     }
     
+    /// Update the connected CursorController chain pulling force, based on the difference between the Host and
+    /// CursorController positions.
+    /// <param name="diff">Difference between the Host and CursorController positions</param>
     private void UpdatePullForce(Vector3 diff)
     {
         if (diff.magnitude > chainLength)
@@ -166,6 +184,8 @@ public class Host : MonoBehaviour, IClickable
         }
     }
 
+    /// Update the Host model direction based on the difference between the Host and CursorController positions.
+    /// <param name="direction">Difference between the Host and CursorController positions</param>
     private void UpdateDirection(Vector3 direction)
     {
         direction.y = 0;
@@ -174,11 +194,13 @@ public class Host : MonoBehaviour, IClickable
         modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, turnSpeed * Time.fixedDeltaTime);
     }
 
+    /// Slow down the pulling force towards a magnitude of 0.
     private void Slowdown()
     {
         _pullForce = Vector3.Lerp(_pullForce, Vector3.zero, slowDownSpeed * Time.fixedDeltaTime);
     }
 
+    /// Update Animator animation speed and transform for some juicy feedback on the speed you're pulling the Host.
     private void UpdateAnimator()
     {
         animator.SetFloat(Speed, _pullForce.magnitude);
@@ -188,6 +210,7 @@ public class Host : MonoBehaviour, IClickable
         animator.transform.localEulerAngles = new Vector3(_pullForce.magnitude, 0, Mathf.Sin(_timer / 2 * Mathf.PI) * _pullForce.magnitude / 2);
     }
 
+    /// Update the chain links between the Host and CursorController, with some slack included, for that extra chain-ish feel.
     private void UpdateChainPosition()
     {
         var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
@@ -201,6 +224,8 @@ public class Host : MonoBehaviour, IClickable
         }
     }
 
+    /// Handle player connexion or disconnexion events.
+    /// <param name="playerIndex">The connected player index.</param>
     private void OnPlayerChange(int playerIndex)
     {
         onPlayerChange?.Invoke(playerIndex);
