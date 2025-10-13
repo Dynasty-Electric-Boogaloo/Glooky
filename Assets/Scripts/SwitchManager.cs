@@ -49,7 +49,7 @@ public class SwitchManager : MonoBehaviour
     
     /// Set a callback to stop listening for changes to the switch at the specified channel identifier.
     /// <param name="call">Function called when this channel calls.</param>
-    /// <param name="channel">Channel to stop listening to.</param>
+    /// <param name="channel">Switch channel to stop listening to.</param>
     public static void RemoveListenerOnChannel(UnityAction<int> call, int channel)
     {
         if (_instance == null)

@@ -10,24 +10,24 @@ using UnityEngine.Serialization;
 [HideMonoScript]
 public class SwitchListener : MonoBehaviour
 {
-    public UnityEvent<int> onSwitchCallReceived;
+    public UnityEvent<int> onSwitchChanged;
     
     [SerializeField] private int channelListenedTo;
 
     private void OnEnable()
     {
-        SwitchManager.AddListenerOnChannel(OnSwitchCalled, channelListenedTo);
+        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo);
     }
 
     private void OnDisable()
     {
-        SwitchManager.RemoveListenerOnChannel(OnSwitchCalled, channelListenedTo);
+        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo);
     }
     
-    /// Call functions added on this behaviour in the Unity Editor.
+    /// Trigger the registered callbacks of the onSwitchChanged event.
     /// <param name="channel">The channel ID.</param>
-    private void OnSwitchCalled(int channel)
+    private void OnSwitchChanged(int channel)
     {
-        onSwitchCallReceived?.Invoke(channel);
+        onSwitchChanged?.Invoke(channel);
     }
 }
