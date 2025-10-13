@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
 /// TEST CLASS
+/// Only use this class for testing.
+/// Generic class to set and call any switch in the inspector.
 [HideMonoScript]
 public class SwitchCaller : MonoBehaviour
 {

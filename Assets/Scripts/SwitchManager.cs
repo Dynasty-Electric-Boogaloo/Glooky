@@ -5,15 +5,15 @@ using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
+/// Singleton component that holds the switch array and handles its calls.
 [HideMonoScript]
 public class SwitchManager : MonoBehaviour
 {
     private static SwitchManager _instance;
-    public static SwitchManager Instance => _instance;
     
     private BitArray128 _switches = new();
     
-    public UnityEvent<int>[] onSwitchCalled = new UnityEvent<int>[128];
+    [SerializeField] private UnityEvent<int>[] onSwitchChanged = new UnityEvent<int>[128];
     
     private void Awake()
     {
@@ -27,9 +27,7 @@ public class SwitchManager : MonoBehaviour
         DontDestroyOnLoad(_instance);
     }
     
-    /// <summary>
-    /// Set MonoBehaviour to start listening to calls from a specified channel.
-    /// </summary>
+    /// Set a callback to start listening for changes to the switch at the specified channel identifier.
     /// <param name="call">Function called when this channel calls.</param>
     /// <param name="channel">Channel to start listening to.</param>
     public static void AddListenerOnChannel(UnityAction<int> call, int channel)
@@ -40,18 +38,16 @@ public class SwitchManager : MonoBehaviour
             return;
         }
         
-        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        if (channel >= _instance.onSwitchChanged.Length || channel < 0)
         {
             Debug.LogWarning($"Invalid channel {channel} (AddListenerOnChannel)");
             return;
         }
 
-        _instance.onSwitchCalled[channel].AddListener(call);
+        _instance.onSwitchChanged[channel].AddListener(call);
     }
     
-    /// <summary>
-    /// Set MonoBehaviour to stop listening to calls from a specified channel.
-    /// </summary>
+    /// Set a callback to stop listening for changes to the switch at the specified channel identifier.
     /// <param name="call">Function called when this channel calls.</param>
     /// <param name="channel">Channel to stop listening to.</param>
     public static void RemoveListenerOnChannel(UnityAction<int> call, int channel)
@@ -62,19 +58,16 @@ public class SwitchManager : MonoBehaviour
             return;
         }
 
-        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        if (channel >= _instance.onSwitchChanged.Length || channel < 0)
         {
             Debug.LogWarning($"Invalid channel {channel} (RemoveListenerOnChannel)");
             return;
         }
             
-
-        _instance.onSwitchCalled[channel].RemoveListener(call);
+        _instance.onSwitchChanged[channel].RemoveListener(call);
     }
     
-    /// <summary>
-    /// Get a specified channel's state.
-    /// </summary>
+    /// Get switch's state using specified channel identifier.
     /// <param name="channel">The channel state to get.</param>
     /// <returns>The channel's state.</returns>
     public static bool GetSwitch(int channel)
@@ -85,20 +78,17 @@ public class SwitchManager : MonoBehaviour
             return false;
         }
 
-        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        if (channel >= _instance.onSwitchChanged.Length || channel < 0)
         {
             Debug.LogWarning($"Invalid channel {channel} (GetSwitch)");
             return false;
         }
         
-        var uChannel = (uint) channel;
-        return _instance._switches[uChannel];
+        return _instance._switches[(uint)channel];
     }
     
-    /// <summary>
-    /// Set a specified channel's state. Also invoke a call from the same channel.
-    /// </summary>
-    /// <param name="channel">Switch to set and invoke a call from.</param>
+    /// Set switch's state using specified channel identifier. Invokes onSwitchChanged if the switch state changes.
+    /// <param name="channel">Switch to be set.</param>
     /// <param name="value">New Switch value.</param>
     public static void SetSwitch(int channel, bool value)
     {
@@ -108,20 +98,19 @@ public class SwitchManager : MonoBehaviour
             return;
         }
 
-        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        if (channel >= _instance.onSwitchChanged.Length || channel < 0)
         {
             Debug.LogWarning($"Invalid channel {channel} (SetSwitch)");
             return;
         }
-        
-        var uChannel = (uint) channel;
-        _instance._switches[uChannel] = value;
-        _instance.onSwitchCalled[channel]?.Invoke(channel);
+
+        var isSwitchStateChanged = _instance._switches[(uint)channel] ^ value;
+        _instance._switches[(uint)channel] = value;
+        if (isSwitchStateChanged)
+            _instance.onSwitchChanged[channel]?.Invoke(channel);
     }
     
-    /// <summary>
     /// Reset all switches to false.
-    /// </summary>
     public static void ResetSwitches()
     {
         if (_instance == null)

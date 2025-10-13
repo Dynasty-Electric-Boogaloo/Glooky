@@ -80,12 +80,8 @@ public class Host : MonoBehaviour, IClickable
     /// <param name="cursor">CursorController that is connecting to this Host</param>
     public void Capture(CursorController cursor)
     {
-        // If passing null argument, call Release instead.
         if (!cursor)
-        {
-            Release();
             return;
-        }
         
         if (_cursor)
         {

@@ -5,6 +5,8 @@ using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
+/// Generic class to receive switch calls and handle them.
+/// Prioritize implementing listeners directly in relevant classes instead.
 [HideMonoScript]
 public class SwitchListener : MonoBehaviour
 {
@@ -22,9 +24,7 @@ public class SwitchListener : MonoBehaviour
         SwitchManager.RemoveListenerOnChannel(OnSwitchCalled, channelListenedTo);
     }
     
-    /// <summary>
     /// Call functions added on this behaviour in the Unity Editor.
-    /// </summary>
     /// <param name="channel">The channel ID.</param>
     private void OnSwitchCalled(int channel)
     {
