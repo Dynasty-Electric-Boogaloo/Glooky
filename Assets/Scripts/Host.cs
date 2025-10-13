@@ -115,11 +115,14 @@ public class Host : MonoBehaviour, IClickable
         }
     }
 
+    /// Begin interacting state with provided Interactable.
+    /// <param name="interactable">The interactable to interact with.</param>
     public void BeginInteraction(Interactable interactable)
     {
         _targetInteractable = interactable;
     }
 
+    /// Stop interacting and go back to following the cursor controller.
     public void EndInteraction()
     {
         _targetInteractable = null;
