@@ -78,15 +78,21 @@ public class Host : MonoBehaviour, IClickable
     
     /// Handle being captured by a CursorController.
     /// <param name="cursor">CursorController that is connecting to this Host</param>
-    // TODO Handle cursor == null case.
     public void Capture(CursorController cursor)
     {
-        if (!_cursor)
+        // If passing null argument, call Release instead.
+        if (!cursor)
+        {
+            Release();
+            return;
+        }
+        
+        if (_cursor)
         {
             _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
             _cursor.EjectFromHost();
         }
-            
+        
         _cursor = cursor;
         _cursor.onPlayerChange.AddListener(OnPlayerChange);
         
@@ -103,6 +109,7 @@ public class Host : MonoBehaviour, IClickable
     public void Release()
     {
         _cursor.onPlayerChange.RemoveListener(OnPlayerChange);
+        _cursor.EjectFromHost();
         _cursor = null;
         
         OnPlayerChange(-1);
@@ -131,9 +138,11 @@ public class Host : MonoBehaviour, IClickable
 
     /// Check whether the connected CursorController is within the chain length of the Host.
     /// <returns>Whether or not the CursorController is within the chain length of the Host.</returns>
-    // TODO Handle _cursor == null case.
     public bool IsCursorInRange()
     {
+        if (!_cursor)
+            return false;
+        
         var diff = _cursor.GetChainEndTransform().position - chainHolderTransform.position;
         return diff.magnitude < chainLength;
     }
