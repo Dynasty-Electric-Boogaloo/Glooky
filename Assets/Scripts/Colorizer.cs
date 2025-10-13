@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
+/// Allows recoloring the first Material of the provided Renderer array according to a player index.
 public class Colorizer : MonoBehaviour
 {
+    /// Renderers whose first material color will be replaced by a player color.
+    [Tooltip("Renderers whose first material color will be replaced by a player color.")]
     [SerializeField] private Renderer[] renderers;
     private Material[] _baseMaterials;
     private int _playerIndex;
@@ -16,6 +19,10 @@ public class Colorizer : MonoBehaviour
         }
     }
 
+    /// Update the Renderers' first Material color according to playerIndex
+    /// <param name="playerIndex">Identifies which player the renderers should take their color from,
+    ///     -1 is considered as "No Player" and will be assigned a default Color.</param>
+    /// <seealso cref="MaterialColorManager"/>
     public void SetPlayerIndex(int playerIndex)
     {
         _playerIndex = playerIndex;

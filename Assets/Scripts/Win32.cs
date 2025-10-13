@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 public static class Win32
 {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
     public const ushort HID_USAGE_PAGE_GENERIC = 0x01;
     public const ushort HID_USAGE_GENERIC_MOUSE = 0x02;
     public const uint WM_INPUT = 0x00FF;
@@ -126,4 +127,5 @@ public static class Win32
 
         return isWow64;
     }
+#endif
 }
