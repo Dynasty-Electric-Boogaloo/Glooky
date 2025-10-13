@@ -13,8 +13,7 @@ public class SwitchManager : MonoBehaviour
     
     private BitArray128 _switches = new();
     
-    //TODO passer le channel en argument <bool, int>
-    public UnityEvent<bool>[] onSwitchCalled = new UnityEvent<bool>[128];
+    public UnityEvent<int>[] onSwitchCalled = new UnityEvent<int>[128];
     
     private void Awake()
     {
@@ -27,46 +26,87 @@ public class SwitchManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(_instance);
     }
-
-    public static void AddListenerOnChannel(UnityAction<bool> call, uint channel)
+    
+    public static void AddListenerOnChannel(UnityAction<int> call, int channel)
     {
-        //TODO check if _instance is valid
-        if (channel >= _instance.onSwitchCalled.Length)
+        if (_instance == null)
         {
-            Debug.LogWarning($"Invalid channel {channel}");
+            Debug.LogWarning($"SwitchManager instance is null (AddListenerOnChannel)");
+            return;
+        }
+        
+        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        {
+            Debug.LogWarning($"Invalid channel {channel} (AddListenerOnChannel)");
             return;
         }
 
         _instance.onSwitchCalled[channel].AddListener(call);
     }
     
-    public static void RemoveListenerOnChannel(UnityAction<bool> call, uint channel)
+    public static void RemoveListenerOnChannel(UnityAction<int> call, int channel)
     {
-        //TODO check if _instance is valid
-        if (channel >= _instance.onSwitchCalled.Length)
+        if (_instance == null)
+        {
+            Debug.LogWarning($"SwitchManager instance is null (RemoveListenerOnChannel)");
             return;
+        }
+
+        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        {
+            Debug.LogWarning($"Invalid channel {channel} (RemoveListenerOnChannel)");
+            return;
+        }
+            
 
         _instance.onSwitchCalled[channel].RemoveListener(call);
     }
     
-    //TODO can make static
-    public bool GetSwitch(uint index)
+    public static bool GetSwitch(int channel)
     {
-        return _switches[index];
-    }
-    
-    //TODO check if _instance is valid and can make static
-    public void SetSwitch(uint index, bool value)
-    {
-        _switches[index] = value;
+        if (_instance == null)
+        {
+            Debug.LogWarning($"SwitchManager instance is null (GetSwitch)");
+            return false;
+        }
 
-        if (index < onSwitchCalled.Length)
-            onSwitchCalled[index]?.Invoke(value);
+        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        {
+            Debug.LogWarning($"Invalid channel {channel} (GetSwitch)");
+            return false;
+        }
+        
+        var uChannel = (uint) channel;
+        return _instance._switches[uChannel];
     }
     
-    public void ResetSwitches()
+    public static void SetSwitch(int channel, bool value)
     {
-        //TODO check if _instance is valid and can make static
-        _switches = new BitArray128();
+        if (_instance == null)
+        {
+            Debug.LogWarning($"SwitchManager instance is null (SetSwitch)");
+            return;
+        }
+
+        if (channel >= _instance.onSwitchCalled.Length || channel < 0)
+        {
+            Debug.LogWarning($"Invalid channel {channel} (SetSwitch)");
+            return;
+        }
+        
+        var uChannel = (uint) channel;
+        _instance._switches[uChannel] = value;
+        _instance.onSwitchCalled[channel]?.Invoke(channel);
+    }
+    
+    public static void ResetSwitches()
+    {
+        if (_instance == null)
+        {
+            Debug.LogWarning($"SwitchManager instance is null (ResetSwitches)");
+            return;
+        }
+        
+        _instance._switches = new BitArray128();
     }
 }

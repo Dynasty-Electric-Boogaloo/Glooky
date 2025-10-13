@@ -8,9 +8,9 @@ using UnityEngine.Serialization;
 [HideMonoScript]
 public class SwitchListener : MonoBehaviour
 {
-    public UnityEvent<bool> onSwitchCallReceived;
+    public UnityEvent<int> onSwitchCallReceived;
     
-    [SerializeField] private uint channelListenedTo;
+    [SerializeField] private int channelListenedTo;
 
     private void OnEnable()
     {
@@ -22,7 +22,7 @@ public class SwitchListener : MonoBehaviour
         SwitchManager.RemoveListenerOnChannel(OnSwitchCalled, channelListenedTo);
     }
 
-    private void OnSwitchCalled(bool value)
+    private void OnSwitchCalled(int value)
     {
         onSwitchCallReceived?.Invoke(value);
     }

@@ -10,17 +10,17 @@ using UnityEngine.Serialization;
 public class SwitchCaller : MonoBehaviour
 {
     
-    [SerializeField, HideInInspector] public uint switchAt;
+    [SerializeField, HideInInspector] public int switchAt;
     
     [Button(ButtonSizes.Large, "Call Switch On")]
     private void OnSwitchOn()
     {
-        SwitchManager.Instance.SetSwitch(switchAt, true);
+        SwitchManager.SetSwitch(switchAt, true);
     }
     
     [Button(ButtonSizes.Large, "Call Switch Off")]
     private void OnSwitchOff()
     {
-        SwitchManager.Instance.SetSwitch(switchAt, false);
+        SwitchManager.SetSwitch(switchAt, false);
     }
 }
