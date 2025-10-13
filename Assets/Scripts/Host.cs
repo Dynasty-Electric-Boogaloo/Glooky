@@ -128,6 +128,7 @@ public class Host : MonoBehaviour, IClickable
     /// Stop interacting and go back to following the cursor controller.
     public void EndInteraction()
     {
+        _targetInteractable.Interact(false);
         _targetInteractable = null;
     }
     
@@ -198,9 +199,14 @@ public class Host : MonoBehaviour, IClickable
             inDiff.y = 0;
 
             if (inDiff.magnitude > 0.2f)
+            {
                 _pullForce = inDiff * movementSpeed;
+            }
             else
+            {
+                _targetInteractable.Interact(true);
                 Slowdown();
+            }
 
             if (diff.magnitude > interactionBreakDistance)
                 EndInteraction();

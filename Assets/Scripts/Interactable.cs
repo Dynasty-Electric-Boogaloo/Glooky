@@ -21,6 +21,8 @@ public class Interactable : MonoBehaviour, IClickable
         return true;
     }
 
+    public virtual void Interact(bool isInteracting) {}
+
     public ClickableType GetClickableType()
     {
         return ClickableType.Interactable;
