@@ -9,8 +9,7 @@ using UnityEngine.Serialization;
 [HideMonoScript]
 public class SwitchCaller : MonoBehaviour
 {
-    
-    [SerializeField, HideInInspector] public int switchAt;
+    [SerializeField] private int switchAt;
     
     [Button(ButtonSizes.Large, "Call Switch On")]
     private void OnSwitchOn()
