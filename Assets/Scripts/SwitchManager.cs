@@ -27,6 +27,11 @@ public class SwitchManager : MonoBehaviour
         DontDestroyOnLoad(_instance);
     }
     
+    /// <summary>
+    /// Set MonoBehaviour to start listening to calls from a specified channel.
+    /// </summary>
+    /// <param name="call">Function called when this channel calls.</param>
+    /// <param name="channel">Channel to start listening to.</param>
     public static void AddListenerOnChannel(UnityAction<int> call, int channel)
     {
         if (_instance == null)
@@ -44,6 +49,11 @@ public class SwitchManager : MonoBehaviour
         _instance.onSwitchCalled[channel].AddListener(call);
     }
     
+    /// <summary>
+    /// Set MonoBehaviour to stop listening to calls from a specified channel.
+    /// </summary>
+    /// <param name="call">Function called when this channel calls.</param>
+    /// <param name="channel">Channel to stop listening to.</param>
     public static void RemoveListenerOnChannel(UnityAction<int> call, int channel)
     {
         if (_instance == null)
@@ -62,6 +72,11 @@ public class SwitchManager : MonoBehaviour
         _instance.onSwitchCalled[channel].RemoveListener(call);
     }
     
+    /// <summary>
+    /// Get a specified channel's state.
+    /// </summary>
+    /// <param name="channel">The channel state to get.</param>
+    /// <returns>The channel's state.</returns>
     public static bool GetSwitch(int channel)
     {
         if (_instance == null)
@@ -80,6 +95,11 @@ public class SwitchManager : MonoBehaviour
         return _instance._switches[uChannel];
     }
     
+    /// <summary>
+    /// Set a specified channel's state. Also invoke a call from the same channel.
+    /// </summary>
+    /// <param name="channel">Switch to set and invoke a call from.</param>
+    /// <param name="value">New Switch value.</param>
     public static void SetSwitch(int channel, bool value)
     {
         if (_instance == null)
@@ -99,6 +119,9 @@ public class SwitchManager : MonoBehaviour
         _instance.onSwitchCalled[channel]?.Invoke(channel);
     }
     
+    /// <summary>
+    /// Reset all switches to false.
+    /// </summary>
     public static void ResetSwitches()
     {
         if (_instance == null)

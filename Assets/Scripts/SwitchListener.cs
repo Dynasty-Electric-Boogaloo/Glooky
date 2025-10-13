@@ -21,9 +21,13 @@ public class SwitchListener : MonoBehaviour
     {
         SwitchManager.RemoveListenerOnChannel(OnSwitchCalled, channelListenedTo);
     }
-
-    private void OnSwitchCalled(int value)
+    
+    /// <summary>
+    /// Call functions added on this behaviour in the Unity Editor.
+    /// </summary>
+    /// <param name="channel">The channel ID.</param>
+    private void OnSwitchCalled(int channel)
     {
-        onSwitchCallReceived?.Invoke(value);
+        onSwitchCallReceived?.Invoke(channel);
     }
 }

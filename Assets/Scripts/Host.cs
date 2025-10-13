@@ -115,7 +115,7 @@ public class Host : MonoBehaviour, IClickable
     
     /// Handle being clicked by a CursorController, effectively beginning the capturing process.
     /// <param name="controller">CursorController that is capturing Host.</param>
-    /// <returns>Whether or not the interaction succeded.</returns>
+    /// <returns>Whether or not the interaction succeeded.</returns>
     public bool Click(CursorController controller)
     {
         controller.AssignHost(this);
@@ -224,7 +224,7 @@ public class Host : MonoBehaviour, IClickable
         }
     }
 
-    /// Handle player connexion or disconnexion events.
+    /// Handle player connexion or disconnection events.
     /// <param name="playerIndex">The connected player index.</param>
     private void OnPlayerChange(int playerIndex)
     {
