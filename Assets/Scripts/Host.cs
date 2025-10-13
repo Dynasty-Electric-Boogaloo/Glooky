@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// Basic implementation of Host
@@ -20,6 +20,7 @@ public class Host : MonoBehaviour, IClickable
     [Header("Chain")]
     [SerializeField] private float chainLength;
     [SerializeField] private float restrainDistance;
+    [SerializeField] private float interactionBreakDistance;
     [SerializeField] private float chainSlackHeight;
     [SerializeField] private int chainLinkCount;
     [SerializeField] private Transform chainHolderTransform;
@@ -38,6 +39,7 @@ public class Host : MonoBehaviour, IClickable
     private float _verticalVelocity;
     private Vector3 _pullForce;
     private float _timer;
+    private Interactable _targetInteractable;
     
     private void Awake()
     {
@@ -115,6 +117,19 @@ public class Host : MonoBehaviour, IClickable
             chainLink.gameObject.SetActive(false);
         }
     }
+
+    /// Begin interacting state with provided Interactable.
+    /// <param name="interactable">The interactable to interact with.</param>
+    public void BeginInteraction(Interactable interactable)
+    {
+        _targetInteractable = interactable;
+    }
+
+    /// Stop interacting and go back to following the cursor controller.
+    public void EndInteraction()
+    {
+        _targetInteractable = null;
+    }
     
     /// Handle being clicked by a CursorController, effectively beginning the capturing process.
     /// <param name="controller">CursorController that is capturing Host.</param>
@@ -176,17 +191,33 @@ public class Host : MonoBehaviour, IClickable
     /// <param name="diff">Difference between the Host and CursorController positions</param>
     private void UpdatePullForce(Vector3 diff)
     {
+        if (_targetInteractable)
+        {
+            var target = _targetInteractable.GetTargetPoint();
+            var inDiff = target - _rigidbody.position;
+            inDiff.y = 0;
+
+            if (inDiff.magnitude > 0.2f)
+                _pullForce = inDiff * movementSpeed;
+            else
+                Slowdown();
+
+            if (diff.magnitude > interactionBreakDistance)
+                EndInteraction();
+
+            return;
+        }
+        
         if (diff.magnitude > chainLength)
         {
             _pullForce = (diff - diff.normalized * chainLength) * movementSpeed;
             var magnitude = _pullForce.magnitude;
             _pullForce.y = 0;
             _pullForce = _pullForce.normalized * magnitude;
+            return;
         }
-        else
-        {
-            Slowdown();
-        }
+        
+        Slowdown();
     }
 
     /// Update the Host model direction based on the difference between the Host and CursorController positions.
