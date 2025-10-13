@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4593339220791254209}
   - component: {fileID: 3634784668022756722}
   - component: {fileID: 428641196935992654}
+  - component: {fileID: 7743215506075183802}
   m_Layer: 0
   m_Name: Host
   m_TagString: Untagged
@@ -97,16 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c63289fb42348a8b21941845672895b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  slowDownSpeed: 10
+  followSpeed: 0.33
+  followMaxSpeed: 1
   turnSpeed: 10
-  gravity: -10
-  maxFallSpeed: -30
-  groundCheckLength: 1.5
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
-  hoverHeight: 1
   chainLength: 3
   restrainDistance: 6
   interactionBreakDistance: 5
@@ -131,6 +125,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7743215506075183802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276674867635883759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e50a431a10841879bc9a2a8b8cc02fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhysicsController
+  maxSpeed: 20
+  acceleration: 200
+  maxAcceleration: 150
+  gravity: 20
+  hoverHeight: 0.5
+  hoverForce: 1000
+  hoverDamper: 40
+  groundCheckRadius: 0.25
+  groundCheckLength: 2
+  airborneCheckLength: 1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 9
 --- !u!1 &8689010022526074549
 GameObject:
   m_ObjectHideFlags: 0

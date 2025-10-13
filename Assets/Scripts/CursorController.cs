@@ -8,17 +8,10 @@ public class CursorController : MonoBehaviour
 {
     [SerializeField] private int mouseIndex;
     [SerializeField] private Host startHost;
-    
-    [Header("Movement")]
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private Vector2 movementRange;
+
+    [SerializeField] private float maxMovementRange;
+    [SerializeField] private float minTurnVelocity;
     [SerializeField] private float turnSpeed;
-    [SerializeField] private float slowDownSpeed;
-    [SerializeField] private float gravity;
-    [SerializeField] private float maxFallSpeed;
-    [SerializeField] private float groundCheckLength;
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private float hoverHeight;
 
     [Header("Interaction")]
     [SerializeField] private float interactionRange;
@@ -31,7 +24,6 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Transform chainEndTransform;
     [SerializeField] private Colorizer colorizer;
     [SerializeField] private ParticleSystem clickParticles;
-    [SerializeField] private AudioSource clickSound;
 
     /// Event called each time the player clicks the mouse, in any context.
     public UnityEvent onClick;
@@ -42,9 +34,9 @@ public class CursorController : MonoBehaviour
     private Material _baseMaterial;
     private Transform _camera;
     private Rigidbody _rigidbody;
+    private PhysicsController _physicsController;
     private Host _host;
-    private Vector3 _inputDelta;
-    private float _verticalVelocity;
+    private Vector3 _direction;
     
     private Collider[] _interactionColliders;
     
@@ -52,6 +44,7 @@ public class CursorController : MonoBehaviour
     {
         _camera = Camera.main.transform;
         _rigidbody = GetComponent<Rigidbody>();
+        _physicsController = GetComponent<PhysicsController>();
         _interactionColliders = new Collider[maxInteractionFound];
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -93,28 +86,24 @@ public class CursorController : MonoBehaviour
         camRight.y = 0;
         camRight.Normalize();
 
-        _inputDelta += new Vector3(camForward.x * -input.y + camRight.x * input.x, 0, camForward.z * -input.y + camRight.z * input.x);
-
-        if (_inputDelta.magnitude > movementRange.y)
-            _inputDelta = _inputDelta.normalized * movementRange.y;
-
+        _direction += new Vector3(camForward.x * -input.y + camRight.x * input.x, 0, camForward.z * -input.y + camRight.z * input.x);
+        _direction = Vector3.ClampMagnitude(_direction, maxMovementRange);
+        
+        _physicsController.SetMovementDirection(_direction / maxMovementRange * ComputeSpeed());
         MultiMouse.Instance.ClearMouseData(mouseIndex);
     }
 
     private void FixedUpdate()
     {
-        GroundCheck();
-        if (_inputDelta.magnitude > movementRange.x)
-            modelTransform.forward = Vector3.Slerp(modelTransform.forward, new Vector3(_inputDelta.normalized.x, 0, _inputDelta.normalized.z), turnSpeed * Time.fixedDeltaTime);
-        else
-            _inputDelta = Vector3.zero;
+        if (_rigidbody.linearVelocity.magnitude > minTurnVelocity)
+        {
+            var direction = _rigidbody.linearVelocity;
+            direction.y = 0;
+            direction.Normalize();
+            modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, _rigidbody.linearVelocity.magnitude * turnSpeed * Time.fixedDeltaTime);
+        }
 
-        var speed = ComputeSpeed();
-        _rigidbody.linearVelocity = new Vector3(_inputDelta.x * speed, _verticalVelocity, _inputDelta.z * speed);
-        _inputDelta = Vector3.Lerp(_inputDelta, Vector3.zero, slowDownSpeed * Time.fixedDeltaTime);
-
-        if (_host)
-            transform.position = _host.RestrainCursorPosition();
+        _direction = Vector3.zero;
     }
 
     /// Sets the current attached Host of the CursorController, calls provided Host's Capture function.
@@ -194,32 +183,17 @@ public class CursorController : MonoBehaviour
 
         clickable?.Click(this);
     }
-
-    /// Handle ground alignment and gravity
-    private void GroundCheck()
-    {
-        var ray = new Ray(_rigidbody.position, Vector3.down);
-
-        if (!Physics.Raycast(ray, out var hit, groundCheckLength, groundMask))
-        {
-            _verticalVelocity = Mathf.Max(_verticalVelocity + gravity * Time.fixedDeltaTime, maxFallSpeed);
-            return;
-        }
-        
-        _verticalVelocity = 0;
-        _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
-    }
-
+    
     /// Get the CursorController speed based on context like if the controller has an attached Host and/or is within range of it.
     private float ComputeSpeed()
     {
         if (!_host)
-            return movementSpeed / 2;
+            return 0.5f;
 
         if (_host.IsCursorInRange())
-            return movementSpeed * 2;
+            return 2;
 
-        return movementSpeed;
+        return 1;
     }
 
     /// Handle player connexion event.

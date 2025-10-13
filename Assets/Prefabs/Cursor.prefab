@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 7229844784882277106}
   - component: {fileID: 1753532423845777751}
   - component: {fileID: 2442204847619400538}
-  - component: {fileID: 2456625674763827886}
+  - component: {fileID: 8665217817101190318}
   m_Layer: 0
   m_Name: Cursor
   m_TagString: Untagged
@@ -206,28 +206,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseIndex: 0
   startHost: {fileID: 0}
-  movementSpeed: 0.1
-  movementRange: {x: 5, y: 200}
-  turnSpeed: 100
-  slowDownSpeed: 10
-  gravity: -10
-  maxFallSpeed: -30
-  groundCheckLength: 1
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
-  hoverHeight: 0.5
+  maxMovementRange: 25
+  minTurnVelocity: 0.1
+  turnSpeed: 5
   interactionRange: 1.5
   interactionPoint: {fileID: 6063896250734434032}
   interactionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   maxInteractionFound: 10
   modelTransform: {fileID: 7957163473979323681}
   chainEndTransform: {fileID: 614586824106236918}
   colorizer: {fileID: 6185943867352646836}
   clickParticles: {fileID: 4798436739220188953}
-  clickSound: {fileID: 2456625674763827886}
   onClick:
     m_PersistentCalls:
       m_Calls:
@@ -258,103 +249,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!82 &2456625674763827886
-AudioSource:
+--- !u!114 &8665217817101190318
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3587284791648960590}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: dbfef68be7f9cfe4a82b6525376f98ab, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 0.25
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e50a431a10841879bc9a2a8b8cc02fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhysicsController
+  maxSpeed: 20
+  acceleration: 200
+  maxAcceleration: 150
+  gravity: 20
+  hoverHeight: 0.5
+  hoverForce: 500
+  hoverDamper: 20
+  groundCheckRadius: 0.25
+  groundCheckLength: 2
+  airborneCheckLength: 1
+  groundMask:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_Bits: 9
 --- !u!1 &7369750367963566923
 GameObject:
   m_ObjectHideFlags: 0
