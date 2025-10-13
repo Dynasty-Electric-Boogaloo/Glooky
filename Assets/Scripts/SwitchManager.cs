@@ -27,9 +27,9 @@ public class SwitchManager : MonoBehaviour
         DontDestroyOnLoad(_instance);
     }
     
-    /// Set a callback to start listening for changes to the switch at the specified channel identifier.
-    /// <param name="call">Function called when this channel calls.</param>
-    /// <param name="channel">Channel to start listening to.</param>
+    /// Set a callback to listen for changes to the switch at the specified channel identifier.
+    /// <param name="call">Callback function called when this switch is changed.</param>
+    /// <param name="channel">Switch channel to listen to.</param>
     public static void AddListenerOnChannel(UnityAction<int> call, int channel)
     {
         if (_instance == null)
@@ -47,7 +47,7 @@ public class SwitchManager : MonoBehaviour
         _instance.onSwitchChanged[channel].AddListener(call);
     }
     
-    /// Set a callback to stop listening for changes to the switch at the specified channel identifier.
+    /// Stop a callback from listening to changes to the switch at the specified channel identifier.
     /// <param name="call">Function called when this channel calls.</param>
     /// <param name="channel">Switch channel to stop listening to.</param>
     public static void RemoveListenerOnChannel(UnityAction<int> call, int channel)
@@ -68,7 +68,7 @@ public class SwitchManager : MonoBehaviour
     }
     
     /// Get switch's state using specified channel identifier.
-    /// <param name="channel">The channel state to get.</param>
+    /// <param name="channel">The channel from which to get the switch's state.</param>
     /// <returns>The channel's state.</returns>
     public static bool GetSwitch(int channel)
     {
