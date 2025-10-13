@@ -1187,7 +1187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 2
+  switchChannel: 9
 --- !u!65 &747315971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1937,7 +1937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4d653df015439ab545b0e678b50059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  channelListenedTo: 2
+  channelListenedTo: 1
 --- !u!1 &1241629012
 GameObject:
   m_ObjectHideFlags: 0
@@ -2417,7 +2417,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 2
+  switchChannel: 8
+--- !u!1 &1492691065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1492691066}
+  - component: {fileID: 1492691067}
+  m_Layer: 0
+  m_Name: SwitchGate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1492691066
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492691065}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.41052, y: 1.41076, z: -1.38386}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1492691067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492691065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ddbbf77f3a4bcfa03bc21557ea2e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwitchGate
+  type: 1
+  channelListenedTo1: 8
+  channelListenedTo2: 9
+  switchChannel: 1
 --- !u!1001 &1513438804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2885,3 +2933,4 @@ SceneRoots:
   - {fileID: 1449232161}
   - {fileID: 747315974}
   - {fileID: 946235860}
+  - {fileID: 1492691066}

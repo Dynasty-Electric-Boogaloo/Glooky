@@ -38,13 +38,18 @@ public class Door : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, _targetPosition, _slowDownSpeed * Time.fixedDeltaTime);
     }
     
-    /// Trigger the registered callbacks of the onSwitchChanged event.
+    /// Execute behaviour.
     /// <param name="channel">The channel ID.</param>
     private void OnSwitchChanged(int channel)
     {
         if (channel != channelListenedTo)
             return;
         
+        OpenOrCloseDoor();
+    }
+
+    private void OpenOrCloseDoor()
+    {
         if (SwitchManager.GetSwitch(channelListenedTo))
         {
             _targetPosition = transform.position - new Vector3(0, 3f, 0);
