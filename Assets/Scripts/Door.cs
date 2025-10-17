@@ -1,20 +1,21 @@
 ﻿using System;
 using UnityEngine;
 
-/// Base class for Interactable objects.
-// TODO Implement Host interaction.
+/// Door behaviour. Can receive channel calls to open.
 public class Door : MonoBehaviour
 {
     [SerializeField] private int channelListenedTo;
     
     // temp variable for showcase
+    private Vector3 _initialPosition;
     private Vector3 _targetPosition;
-    private float _slowDownSpeed;
+    private float _moveSpeed;
 
     private void Awake()
     {
+        _initialPosition = transform.position;
         _targetPosition = transform.position;
-        _slowDownSpeed = 10f;
+        _moveSpeed = 10f;
     }
     
     private void OnEnable()
@@ -35,7 +36,7 @@ public class Door : MonoBehaviour
 
     private void UpdatePosition()
     {
-        transform.position = Vector3.Lerp(transform.position, _targetPosition, _slowDownSpeed * Time.fixedDeltaTime);
+        transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.fixedDeltaTime);
     }
     
     /// Execute behaviour.
@@ -45,17 +46,17 @@ public class Door : MonoBehaviour
         if (channel != channelListenedTo)
             return;
         
-        OpenOrCloseDoor();
+        ExecuteBehaviour();
     }
 
-    private void OpenOrCloseDoor()
+    private void ExecuteBehaviour()
     {
         if (SwitchManager.GetSwitch(channelListenedTo))
         {
-            _targetPosition = transform.position - new Vector3(0, 3f, 0);
+            _targetPosition = _initialPosition - new Vector3(0, 3f, 0);
             return;
         }
         
-        _targetPosition = transform.position + new Vector3(0, 3f, 0);
+        _targetPosition = _initialPosition;
     }
 }
