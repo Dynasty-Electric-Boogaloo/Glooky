@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// Basic implementation of Host
-// TODO Rework movement to be more physics based.
 public class Host : MonoBehaviour, IClickable
 {
     private static readonly int Speed = Animator.StringToHash("Speed");

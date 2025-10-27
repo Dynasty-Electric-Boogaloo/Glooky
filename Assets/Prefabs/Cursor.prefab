@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 1753532423845777751}
   - component: {fileID: 2442204847619400538}
   - component: {fileID: 8665217817101190318}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ MonoBehaviour:
   interactionPoint: {fileID: 6063896250734434032}
   interactionMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   maxInteractionFound: 10
   modelTransform: {fileID: 7957163473979323681}
   chainEndTransform: {fileID: 614586824106236918}

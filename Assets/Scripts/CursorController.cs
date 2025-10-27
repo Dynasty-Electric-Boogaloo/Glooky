@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// Basic implementation of CursorController
-// TODO Rework movement to be more physics based.
 public class CursorController : MonoBehaviour
 {
     [SerializeField] private int mouseIndex;
