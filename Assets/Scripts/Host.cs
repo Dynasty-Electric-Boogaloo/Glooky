@@ -1,21 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// Basic implementation of Host
-// TODO Rework movement to be more physics based.
 public class Host : MonoBehaviour, IClickable
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
 
     [Header("Movement")]
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private float slowDownSpeed;
+    [SerializeField] private float followSpeed;
+    [SerializeField] private float followMaxSpeed;
     [SerializeField] private float turnSpeed;
-    [SerializeField] private float gravity;
-    [SerializeField] private float maxFallSpeed;
-    [SerializeField] private float groundCheckLength;
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private float hoverHeight;
     
     [Header("Chain")]
     [SerializeField] private float chainLength;
@@ -35,15 +30,14 @@ public class Host : MonoBehaviour, IClickable
     private Transform[] _chainLinks;
 
     private CursorController _cursor;
+    private PhysicsController _physicsController;
     private Rigidbody _rigidbody;
     private float _verticalVelocity;
-    private Vector3 _pullForce;
     private float _timer;
     private Interactable _targetInteractable;
     
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
         _chainLinks = new Transform[chainLinkCount];
         
         for (var i = 0; i < _chainLinks.Length; i++)
@@ -56,6 +50,12 @@ public class Host : MonoBehaviour, IClickable
         onPlayerChange?.Invoke(-1);
     }
 
+    private void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody>();
+        _physicsController = GetComponent<PhysicsController>();
+    }
+
     private void Update()
     {
         UpdateAnimator();
@@ -66,16 +66,10 @@ public class Host : MonoBehaviour, IClickable
 
     private void FixedUpdate()
     {
-        GroundCheck();
+        UpdatePullForce();
 
-        var diff = _cursor ? _cursor.GetChainEndTransform().position - chainHolderTransform.position : Vector3.zero;
-
-        UpdatePullForce(diff);
-
-        if (diff.magnitude > 0.1f)
-            UpdateDirection(diff);
-        
-        _rigidbody.linearVelocity = new Vector3(_pullForce.x, _verticalVelocity, _pullForce.z);
+        if (_rigidbody.linearVelocity.magnitude > 0.1f)
+            UpdateDirection(_rigidbody.linearVelocity);
     }
     
     /// Handle being captured by a CursorController.
@@ -171,27 +165,16 @@ public class Host : MonoBehaviour, IClickable
         position.y = _cursor.transform.position.y;
         return position;
     }
-
-    /// Handle ground alignment and gravity
-    private void GroundCheck()
-    {
-        var ray = new Ray(_rigidbody.position, Vector3.down);
-
-        if (!Physics.Raycast(ray, out var hit, groundCheckLength, groundMask))
-        {
-            _verticalVelocity = Mathf.Max(_verticalVelocity + gravity * Time.fixedDeltaTime, maxFallSpeed);
-            return;
-        }
-        
-        _verticalVelocity = 0;
-        _rigidbody.position = new Vector3(_rigidbody.position.x, hit.point.y + hoverHeight, _rigidbody.position.z);
-    }
     
-    /// Update the connected CursorController chain pulling force, based on the difference between the Host and
-    /// CursorController positions.
-    /// <param name="diff">Difference between the Host and CursorController positions</param>
-    private void UpdatePullForce(Vector3 diff)
+    /// Update the connected CursorController chain pulling force.
+    private void UpdatePullForce()
     {
+        var direction = Vector3.zero;
+        var diff = Vector3.zero;
+        
+        if (_cursor)
+            diff = _cursor.GetChainEndTransform().position - _rigidbody.position;
+        
         if (_targetInteractable)
         {
             var target = _targetInteractable.GetTargetPoint();
@@ -200,7 +183,8 @@ public class Host : MonoBehaviour, IClickable
 
             if (inDiff.magnitude > 0.2f)
             {
-                _pullForce = inDiff * movementSpeed;
+                direction = inDiff * followSpeed;
+                direction = Vector3.ClampMagnitude(direction, followMaxSpeed);
             }
             else
             {
@@ -210,20 +194,17 @@ public class Host : MonoBehaviour, IClickable
 
             if (diff.magnitude > interactionBreakDistance)
                 EndInteraction();
-
-            return;
         }
-        
-        if (diff.magnitude > chainLength)
+        else if (diff.magnitude > chainLength)
         {
-            _pullForce = (diff - diff.normalized * chainLength) * movementSpeed;
-            var magnitude = _pullForce.magnitude;
-            _pullForce.y = 0;
-            _pullForce = _pullForce.normalized * magnitude;
-            return;
+            direction = (diff - diff.normalized * chainLength) * followSpeed;
+            var magnitude = direction.magnitude;
+            direction.y = 0;
+            direction = direction.normalized * magnitude;
+            direction = Vector3.ClampMagnitude(direction, followMaxSpeed);
         }
-        
-        Slowdown();
+
+        _physicsController.SetMovementDirection(direction);
     }
 
     /// Update the Host model direction based on the difference between the Host and CursorController positions.
@@ -236,20 +217,15 @@ public class Host : MonoBehaviour, IClickable
         modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, turnSpeed * Time.fixedDeltaTime);
     }
 
-    /// Slow down the pulling force towards a magnitude of 0.
-    private void Slowdown()
-    {
-        _pullForce = Vector3.Lerp(_pullForce, Vector3.zero, slowDownSpeed * Time.fixedDeltaTime);
-    }
-
     /// Update Animator animation speed and transform for some juicy feedback on the speed you're pulling the Host.
     private void UpdateAnimator()
     {
-        animator.SetFloat(Speed, _pullForce.magnitude);
-        _timer += _pullForce.magnitude * Time.deltaTime;
+        var speed = _rigidbody.linearVelocity.magnitude;
+        animator.SetFloat(Speed, speed);
+        _timer += speed * Time.deltaTime;
         _timer %= 4;
 
-        animator.transform.localEulerAngles = new Vector3(_pullForce.magnitude, 0, Mathf.Sin(_timer / 2 * Mathf.PI) * _pullForce.magnitude / 2);
+        animator.transform.localEulerAngles = new Vector3(speed, 0, Mathf.Sin(_timer / 2 * Mathf.PI) * speed / 2);
     }
 
     /// Update the chain links between the Host and CursorController, with some slack included, for that extra chain-ish feel.
