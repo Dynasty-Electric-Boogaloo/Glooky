@@ -10,6 +10,11 @@ public class Interactable : MonoBehaviour, IClickable
     {
         return transform.position;
     }
+
+    protected virtual void OnClick()
+    {
+        
+    }
     
     public bool Click(CursorController controller)
     {
@@ -18,6 +23,7 @@ public class Interactable : MonoBehaviour, IClickable
             return false;
         
         host.BeginInteraction(this);
+        OnClick();
         return true;
     }
 
