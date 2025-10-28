@@ -2963,7 +2963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4d653df015439ab545b0e678b50059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  channelListenedTo: 12
+  channelListenedTo: 8
 --- !u!1 &1076884794
 GameObject:
   m_ObjectHideFlags: 0

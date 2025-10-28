@@ -28,16 +28,6 @@ public class PressurePlateInteractable : Interactable
 
     private void CheckPressure()
     {
-        var shouldBePressed = _physicsController.GetDistanceFromHoverHeight() > 0.5f;
-        Interact(shouldBePressed);
-    }
-    
-    public override void Interact(bool isInteracting)
-    {
-        if (!(_activated ^ isInteracting))
-            return;
-        
-        _activated = isInteracting;
-        SwitchManager.SetSwitch(outputChannel, _activated);
+        SwitchManager.SetSwitchFloat(outputChannel, _physicsController.GetDistanceFromHoverHeight());
     }
 }

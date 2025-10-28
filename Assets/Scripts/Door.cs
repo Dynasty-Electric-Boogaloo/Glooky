@@ -15,48 +15,19 @@ public class Door : MonoBehaviour
     {
         _initialPosition = transform.position;
         _targetPosition = transform.position;
-        _moveSpeed = 10f;
-    }
-    
-    private void OnEnable()
-    {
-        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo);
-    }
-
-    private void OnDisable()
-    {
-        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo);
+        _moveSpeed = 5f;
     }
     
     private void FixedUpdate()
     {
-        if ((transform.position - _targetPosition).sqrMagnitude > Mathf.Epsilon)
-            UpdatePosition();
+        _targetPosition = Vector3.Lerp(_initialPosition, _initialPosition - new Vector3(0, 2f, 0),
+            SwitchManager.GetSwitchFloat(channelListenedTo));
+        
+        UpdatePosition();
     }
 
     private void UpdatePosition()
     {
-        transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveSpeed * Time.fixedDeltaTime);
-    }
-    
-    /// Execute behaviour.
-    /// <param name="channel">The channel ID.</param>
-    private void OnSwitchChanged(int channel)
-    {
-        if (channel != channelListenedTo)
-            return;
-        
-        ExecuteBehaviour();
-    }
-
-    private void ExecuteBehaviour()
-    {
-        if (SwitchManager.GetSwitch(channelListenedTo))
-        {
-            _targetPosition = _initialPosition - new Vector3(0, 3f, 0);
-            return;
-        }
-        
-        _targetPosition = _initialPosition;
+        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _moveSpeed * Time.fixedDeltaTime);
     }
 }
