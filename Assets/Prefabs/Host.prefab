@@ -56,7 +56,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1.5
+  m_Height: 1.75
   m_Direction: 1
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!54 &3634784668022756722
@@ -67,7 +67,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276674867635883759}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 80
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -141,7 +141,7 @@ MonoBehaviour:
   acceleration: 200
   maxAcceleration: 150
   gravity: 20
-  hoverHeight: 0.5
+  hoverHeight: 1
   hoverForce: 1000
   hoverDamper: 40
   groundCheckRadius: 0.25

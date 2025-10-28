@@ -50,6 +50,9 @@ public class PhysicsController : MonoBehaviour
     private Vector3 _movementDirection;
     private Vector3 _targetVelocity;
     private bool _grounded;
+    private float _distanceFromHover;
+    private Rigidbody _groundBody;
+    
 
     private void Awake()
     {
@@ -70,13 +73,19 @@ public class PhysicsController : MonoBehaviour
         _movementDirection.y = 0;
     }
 
+    public float GetDistanceFromHoverHeigh()
+    {
+        return _grounded ? _distanceFromHover : 0;
+    }
+
     private void HandleMovement()
     {
         var maxVelocity = _movementDirection * maxSpeed;
+        var relativeVel = _rigidbody.linearVelocity - (_groundBody ? _groundBody.linearVelocity : Vector3.zero);
         _targetVelocity = Vector3.MoveTowards(_targetVelocity, maxVelocity, acceleration * Time.fixedDeltaTime);
-        var accelDiff = (_targetVelocity - _rigidbody.linearVelocity) / Time.fixedDeltaTime;
+        var accelDiff = (_targetVelocity - relativeVel) / Time.fixedDeltaTime;
         accelDiff = Vector3.ClampMagnitude(accelDiff, maxAcceleration);
-        _rigidbody.AddForce(Vector3.Scale(accelDiff, new Vector3(1, 0, 1)), ForceMode.Force);
+        _rigidbody.AddForce(Vector3.Scale(accelDiff, new Vector3(1, 0, 1)), ForceMode.Acceleration);
     }
 
     private void GroundCheck()
@@ -92,10 +101,14 @@ public class PhysicsController : MonoBehaviour
             return;
         }
 
-        var heightDiff = hit.distance - hoverHeight - groundCheckRadius;
+        _distanceFromHover = hit.distance - hoverHeight;
         var relVel = Vector3.Dot(ray.direction, _rigidbody.linearVelocity);
 
-        var force = heightDiff * hoverForce - relVel * hoverDamper;
+        var force = _distanceFromHover * hoverForce - relVel * hoverDamper;
         _rigidbody.AddForce(ray.direction * force, ForceMode.Acceleration);
+
+        _groundBody = hit.rigidbody;
+        if (_groundBody)
+            hit.rigidbody.AddForceAtPosition(ray.direction * _rigidbody.mass, hit.point, ForceMode.Acceleration);
     }
 }
