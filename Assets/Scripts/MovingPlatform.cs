@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+//TEST Class do not use.
 public class MovingPlatform : MonoBehaviour
 {
     [SerializeField] private float movementSpeed;
