@@ -1,9 +1,6 @@
-using System;
+using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 [HideMonoScript]
 public class SwitchGate : MonoBehaviour
@@ -16,42 +13,51 @@ public class SwitchGate : MonoBehaviour
     }
     
     [SerializeField] private Type type;
+    [SerializeField] private bool inverted;
     
-    [SerializeField] private int channelListenedTo1;
-    [SerializeField] private int channelListenedTo2;
+    [SerializeField] private List<int> inputChannels;
     
-    [SerializeField] private int switchChannel;
+    [SerializeField] private int outputChannel;
 
     private void OnEnable()
     {
-        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo1);
-        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo2);
+        foreach (var inputChannel in inputChannels)
+            SwitchManager.AddListenerOnChannel(OnSwitchChanged, inputChannel);
     }
 
     private void OnDisable()
     {
-        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo1);
-        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo2);
+        foreach (var inputChannel in inputChannels)
+            SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, inputChannel);
     }
     
     /// Execute behaviour.
     /// <param name="channel">The channel ID.</param>
     private void OnSwitchChanged(int channel)
     {
-        if (channel != channelListenedTo1 && channel != channelListenedTo2)
+        if (!inputChannels.Contains(channel))
             return;
+
+        var result = false;
         
         switch (type)
         {
             case Type.And:
-                SwitchManager.SetSwitch(switchChannel, SwitchManager.GetSwitch(channelListenedTo1) & SwitchManager.GetSwitch(channelListenedTo2));
+                result = true;
+                foreach (var inputChannel in inputChannels)
+                    result &= SwitchManager.GetSwitch(inputChannel);
                 break;
             case Type.Or:
-                SwitchManager.SetSwitch(switchChannel, SwitchManager.GetSwitch(channelListenedTo1) | SwitchManager.GetSwitch(channelListenedTo2));
+                foreach (var inputChannel in inputChannels)
+                    result |= SwitchManager.GetSwitch(inputChannel);
                 break;
             case Type.Xor:
-                SwitchManager.SetSwitch(switchChannel, SwitchManager.GetSwitch(channelListenedTo1) ^ SwitchManager.GetSwitch(channelListenedTo2));
+                foreach (var inputChannel in inputChannels)
+                    result ^= SwitchManager.GetSwitch(inputChannel);
                 break;
         }
+        
+        result ^= inverted;
+        SwitchManager.SetSwitch(outputChannel, result);
     }
 }

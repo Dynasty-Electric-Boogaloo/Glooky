@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 9
+  outputChannel: 0
 --- !u!65 &220801913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 8
+  outputChannel: 8
 --- !u!1 &347324598
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,7 +930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 9
+  outputChannel: 9
 --- !u!1 &627769240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,7 +1616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 10
+  outputChannel: 0
 --- !u!65 &747315971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3687,9 +3687,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchGate
   type: 2
-  channelListenedTo1: 8
-  channelListenedTo2: 9
-  switchChannel: 11
+  inverted: 0
+  inputChannels: 0800000009000000
+  outputChannel: 11
 --- !u!4 &1427006409
 Transform:
   m_ObjectHideFlags: 0
@@ -3860,7 +3860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 8
+  outputChannel: 0
 --- !u!1 &1492691065
 GameObject:
   m_ObjectHideFlags: 0
@@ -3906,9 +3906,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchGate
   type: 1
-  channelListenedTo1: 10
-  channelListenedTo2: 11
-  switchChannel: 12
+  inverted: 0
+  inputChannels: 0a0000000b000000
+  outputChannel: 12
 --- !u!1001 &1513438804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4040,7 +4040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  switchChannel: 10
+  outputChannel: 10
 --- !u!1001 &1665823438
 PrefabInstance:
   m_ObjectHideFlags: 0

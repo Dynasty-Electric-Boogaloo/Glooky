@@ -12,16 +12,16 @@ public class SwitchListener : MonoBehaviour
 {
     public UnityEvent<int> onSwitchChanged;
     
-    [SerializeField] private int channelListenedTo;
+    [SerializeField] private int inputChannel;
 
     private void OnEnable()
     {
-        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo);
+        SwitchManager.AddListenerOnChannel(OnSwitchChanged, inputChannel);
     }
 
     private void OnDisable()
     {
-        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo);
+        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, inputChannel);
     }
     
     /// Trigger the registered callbacks of the onSwitchChanged event.

@@ -5,7 +5,7 @@ using UnityEngine;
 /// Pressure plate behaviour.
 public class PressurePlateInteractable : Interactable
 {
-    [SerializeField] private int switchChannel;
+    [SerializeField] private int outputChannel;
     
     private bool _activated = false;
     private PhysicsController _physicsController;
@@ -38,6 +38,6 @@ public class PressurePlateInteractable : Interactable
             return;
         
         _activated = isInteracting;
-        SwitchManager.SetSwitch(switchChannel, _activated);
+        SwitchManager.SetSwitch(outputChannel, _activated);
     }
 }
