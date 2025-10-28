@@ -73,9 +73,9 @@ public class PhysicsController : MonoBehaviour
         _movementDirection.y = 0;
     }
 
-    public float GetDistanceFromHoverHeigh()
+    public float GetDistanceFromHoverHeight()
     {
-        return _grounded ? _distanceFromHover : 0;
+        return _grounded ? Mathf.Clamp01(-_distanceFromHover / hoverHeight) : 0;
     }
 
     private void HandleMovement()
