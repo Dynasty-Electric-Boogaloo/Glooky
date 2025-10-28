@@ -4,6 +4,16 @@
             "globalId": "GlobalObjectId_V1-2-03547418d49ce1b4bae97fb4a05ba1b0-1598440808-0",
             "source": "builtin",
             "value": "d_BoxCollider Icon"
+        },
+        {
+            "globalId": "GlobalObjectId_V1-2-03547418d49ce1b4bae97fb4a05ba1b0-6159705702925345306-2036669972",
+            "source": "builtin",
+            "value": "d_BoxCollider Icon"
+        },
+        {
+            "globalId": "GlobalObjectId_V1-2-03547418d49ce1b4bae97fb4a05ba1b0-1578522020-0",
+            "source": "builtin",
+            "value": "d_Transform Icon"
         }
     ]
 }
