@@ -99,7 +99,14 @@ public class CursorController : MonoBehaviour
             var direction = _rigidbody.linearVelocity;
             direction.y = 0;
             direction.Normalize();
-            modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction, _rigidbody.linearVelocity.magnitude * turnSpeed * Time.fixedDeltaTime);
+            modelTransform.forward = Vector3.Slerp(modelTransform.forward, direction,
+                _rigidbody.linearVelocity.magnitude * turnSpeed * Time.fixedDeltaTime);
+            
+            if (_host)
+            {
+                var restrain = _host.GetCursorRestrain();
+                _rigidbody.position -= restrain;
+            }
         }
 
         _direction = Vector3.zero;
@@ -150,6 +157,13 @@ public class CursorController : MonoBehaviour
         return _host;
     }
 
+    /// Get the current Rigidbody position.
+    /// <returns>current Rigidbody position.</returns>
+    public Vector3 GetPosition()
+    {
+        return _rigidbody.position;
+    }
+
     /// Handle interactions with the environment, notably IClickable objects.
     private void Interact()
     {
@@ -187,7 +201,7 @@ public class CursorController : MonoBehaviour
     private float ComputeSpeed()
     {
         if (!_host)
-            return 0.5f;
+            return 1.5f;
 
         if (_host.IsCursorInRange())
             return 2;
