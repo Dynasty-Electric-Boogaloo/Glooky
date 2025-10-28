@@ -189,7 +189,6 @@ public class Host : MonoBehaviour, IClickable
             else
             {
                 _targetInteractable.Interact(true);
-                Slowdown();
             }
 
             if (diff.magnitude > interactionBreakDistance)
