@@ -1917,7 +1917,7 @@ MonoBehaviour:
   hoverHeight: 0.2
   hoverForce: 500
   hoverDamper: 20
-  groundCheckRadius: 0.05
+  groundCheckRadius: 0.04
   groundCheckLength: 2
   airborneCheckLength: 1
   groundMask:
@@ -3091,7 +3091,7 @@ MonoBehaviour:
   hoverHeight: 0.2
   hoverForce: 500
   hoverDamper: 20
-  groundCheckRadius: 0.05
+  groundCheckRadius: 0.04
   groundCheckLength: 2
   airborneCheckLength: 1
   groundMask:
@@ -3586,7 +3586,7 @@ MonoBehaviour:
   hoverHeight: 0.2
   hoverForce: 500
   hoverDamper: 20
-  groundCheckRadius: 0.05
+  groundCheckRadius: 0.04
   groundCheckLength: 2
   airborneCheckLength: 1
   groundMask:

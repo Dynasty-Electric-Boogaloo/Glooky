@@ -1,4 +1,7 @@
 ﻿using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 /// Generic component that allows for creating actors that handle gravity, ground alignment, and directional movement.
@@ -90,8 +93,8 @@ public class PhysicsController : MonoBehaviour
 
     private void GroundCheck()
     {
-        var ray = new Ray(_rigidbody.position + Vector3.up * groundCheckRadius, Vector3.down);
-
+        var ray = new Ray(_rigidbody.position + Vector3.up * (groundCheckRadius + 0.01f), Vector3.down);
+        
         var checkLength = _grounded ? groundCheckLength : airborneCheckLength;
         _grounded = Physics.SphereCast(ray, groundCheckRadius, out var hit, checkLength, groundMask);
         
@@ -110,5 +113,13 @@ public class PhysicsController : MonoBehaviour
         _groundBody = hit.rigidbody;
         if (_groundBody)
             hit.rigidbody.AddForceAtPosition(ray.direction * _rigidbody.mass, hit.point, ForceMode.Acceleration);
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!EditorApplication.isPlaying)
+            return;
+        Gizmos.color = _grounded ? Color.red :  Color.green;
+        Gizmos.DrawWireSphere(_rigidbody.position + Vector3.up * (groundCheckRadius + 0.01f), groundCheckRadius);
     }
 }
