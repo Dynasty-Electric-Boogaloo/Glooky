@@ -90,8 +90,8 @@ public class PhysicsController : MonoBehaviour
 
     private void GroundCheck()
     {
-        var ray = new Ray(_rigidbody.position + Vector3.up * groundCheckRadius, Vector3.down);
-
+        var ray = new Ray(_rigidbody.position + Vector3.up * (groundCheckRadius + 0.01f), Vector3.down);
+        
         var checkLength = _grounded ? groundCheckLength : airborneCheckLength;
         _grounded = Physics.SphereCast(ray, groundCheckRadius, out var hit, checkLength, groundMask);
         
