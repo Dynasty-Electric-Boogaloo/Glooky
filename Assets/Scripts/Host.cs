@@ -152,17 +152,18 @@ public class Host : MonoBehaviour, IClickable
         return diff.magnitude < chainLength;
     }
     
-    /// Restrain the position of the connected CursorController to be within the chain length of the host.
-    /// <returns>Constrained CursorController position.</returns>
-    public Vector3 RestrainCursorPosition()
+    /// Get the restrain vector to get the CursorController to be within the chain length of the host.
+    /// <returns>Cursor restrain vector.</returns>
+    public Vector3 GetCursorRestrain()
     {
-        var diff = _cursor.transform.position - transform.position;
+        var cursorPos = _cursor.GetPosition();
+        var diff = cursorPos - _rigidbody.position;
         if (diff.magnitude < restrainDistance)
-            return _cursor.transform.position;
+            return Vector3.zero;
 
         var position = transform.position + diff.normalized * restrainDistance;
-        position.y = _cursor.transform.position.y;
-        return position;
+        position.y = cursorPos.y;
+        return cursorPos - position;
     }
     
     /// Update the connected CursorController chain pulling force.
