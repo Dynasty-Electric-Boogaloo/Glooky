@@ -17,6 +17,7 @@ public class MultiMouse : MonoBehaviour
     /// Structure containing the input data for a single mouse.
     public struct MouseData
     {
+        /// Input device type information
         public enum InputType
         {
             None,
@@ -32,13 +33,17 @@ public class MultiMouse : MonoBehaviour
             public bool Released;
         }
         
+        /// The device type of the virtual mouse
         public InputType Type;
         
         /// The unique device identifier associated with this virtual mouse.
         /// Value is -1 when this virtual mouse is disconnected from any physical device.
         public IntPtr MouseHandle;
 
+        /// Input user associated with the gamepad input device.
         public InputUser DeviceUser;
+        
+        /// Input map associated with the gamepad input device.
         public JoystickInputs JoystickInput;
         
         /// Absolute position tracked for the virtual mouse, not accurate to the system mouse but can be useful for supporting UI stuff.
@@ -49,6 +54,8 @@ public class MultiMouse : MonoBehaviour
         public Button Left;
     }
 
+    /// The delta multiplier to match the joystick movement to mouse movement.
+    [Tooltip("The delta multiplier to match the joystick movement to mouse movement.")]
     [SerializeField] private float cursorDeltaSpeed;
     
     /// Event called when a virtual mouse gets paired to a physical device.
@@ -277,6 +284,9 @@ public class MultiMouse : MonoBehaviour
         }
     }
 
+    /// Callback to handle unpaired gamepads and connect them to available virtual mice. 
+    /// <param name="control">Input that triggered the callback.</param>
+    /// <param name="eventPtr">Event data pointer.</param>
     private void OnUnpairedDeviceUsed(InputControl control, InputEventPtr eventPtr)
     {
         if (control is not ButtonControl) 
@@ -305,6 +315,10 @@ public class MultiMouse : MonoBehaviour
         _spawnedMice.Push(index);
     }
     
+    /// Callback to handle gamepad disconnection.
+    /// <param name="user">Associated input user.</param>
+    /// <param name="change">Event type.</param>
+    /// <param name="device">Associated input device.</param>
     private void OnDeviceChanged(InputUser user, InputUserChange change, InputDevice device)
     {
         if (change != InputUserChange.DeviceLost)
@@ -329,6 +343,9 @@ public class MultiMouse : MonoBehaviour
         }
     }
 
+    /// Get whether or not the passed mouse is paired to any device.
+    /// <param name="mouseData">Virtual mouse data to be checked.</param>
+    /// <returns>true if passed mouse is paired to any device, false otherwise.</returns>
     public bool IsDevicePaired(MouseData mouseData)
     {
         lock (_lock)
