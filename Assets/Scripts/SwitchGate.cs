@@ -12,11 +12,19 @@ public class SwitchGate : MonoBehaviour
         Xor,
     }
     
+    /// Switch gate type.
+    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private Type type;
+    /// Make this gate output the signal when condition is not matched.
+    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private bool inverted;
     
+    /// Channels being listened to.
+    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private List<int> inputChannels;
     
+    /// Channel which is being sent a signal to.
+    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private int outputChannel;
 
     private void OnEnable()
@@ -59,5 +67,17 @@ public class SwitchGate : MonoBehaviour
         
         result ^= inverted;
         SwitchManager.SetSwitch(outputChannel, result);
+    }
+    
+    /// Internal function to rename the gate automatically when properties are changed.
+    private void UpdateName()
+    {
+        var newName = inverted ? (type == Type.Xor ? "Xnor" : "N" + type.ToString().ToLower()) : type.ToString();
+        newName += "Gate_";
+        foreach (var inputChannel in inputChannels)
+            newName += inputChannel + "-";
+        newName = newName.TrimEnd('-');
+        newName += "_" + outputChannel;
+        this.name = newName;
     }
 }
