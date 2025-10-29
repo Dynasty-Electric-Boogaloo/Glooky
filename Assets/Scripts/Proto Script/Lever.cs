@@ -22,12 +22,12 @@ public class Lever : Interactable
         if (OnOff)
         {
             OnOff = false;
-            SwitchManager.SetSwitch(_channel,true);
+            SwitchManager.SetSwitch(_channel,false);
         }
         else
         {
             OnOff = true;
-            SwitchManager.SetSwitch(_channel,false);
+            SwitchManager.SetSwitch(_channel,true);
         }
     }
 
