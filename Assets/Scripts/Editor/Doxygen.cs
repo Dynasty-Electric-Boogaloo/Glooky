@@ -14,7 +14,7 @@ namespace Editor
 
         private static bool AutoRefreshEnabled
         {
-            get => EditorPrefs.GetBool(SettingName, true);
+            get => EditorPrefs.GetBool(SettingName, false);
             set => EditorPrefs.SetBool(SettingName, value);
         }
         

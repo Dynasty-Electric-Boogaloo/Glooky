@@ -185,7 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08d054ef5bf4a8db61c2b85ed3fedc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
-  physicsController: {fileID: 1826550404}
 --- !u!1 &294129450
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f88d42529fb54a43ab319ca65a657166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursorDeltaSpeed: 25
   onMouseSpawn:
     m_PersistentCalls:
       m_Calls: []
@@ -2192,7 +2192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08d054ef5bf4a8db61c2b85ed3fedc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
-  physicsController: {fileID: 1426145887}
 --- !u!1001 &1407663357
 PrefabInstance:
   m_ObjectHideFlags: 0

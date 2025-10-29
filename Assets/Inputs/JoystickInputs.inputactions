@@ -1,0 +1,66 @@
+{
+    "version": 1,
+    "name": "JoystickInputs",
+    "maps": [
+        {
+            "name": "Cursor",
+            "id": "d386c534-e915-44ed-849f-471acfeb280f",
+            "actions": [
+                {
+                    "name": "MoveDelta",
+                    "type": "PassThrough",
+                    "id": "d7be2d9f-b6eb-4257-b713-791f2ec339a6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "e0c2b226-363c-4ef5-a30d-348f2f822a1d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "61bcefbb-086a-450a-99cd-d71720180d09",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b4782e4-1036-4c12-a604-c6e57a5a2527",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "47ee850b-e821-4efb-98ac-3a625f4727b2",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
