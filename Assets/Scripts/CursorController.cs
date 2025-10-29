@@ -136,7 +136,7 @@ public class CursorController : MonoBehaviour
     {
         if (mouseIndex >= 0)
         {
-            if (MultiMouse.Instance.GetMouseData(mouseIndex).MouseHandle == (IntPtr)(-1))
+            if (!MultiMouse.Instance.IsDevicePaired(MultiMouse.Instance.GetMouseData(mouseIndex)))
                 return -1;
         }
         

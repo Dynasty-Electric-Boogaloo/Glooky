@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Users;
 
 /// Multiple Mouse Management Singleton
 // TODO Add MouseData strobe buffers in order to lock in copies of the current input data for the whole frame.
@@ -13,6 +17,13 @@ public class MultiMouse : MonoBehaviour
     /// Structure containing the input data for a single mouse.
     public struct MouseData
     {
+        public enum InputType
+        {
+            None,
+            Mouse,
+            Controller
+        }
+        
         /// Button clicking data.
         public struct Button
         {
@@ -21,9 +32,15 @@ public class MultiMouse : MonoBehaviour
             public bool Released;
         }
         
+        public InputType Type;
+        
         /// The unique device identifier associated with this virtual mouse.
         /// Value is -1 when this virtual mouse is disconnected from any physical device.
         public IntPtr MouseHandle;
+
+        public InputUser DeviceUser;
+        public JoystickInputs JoystickInput;
+        
         /// Absolute position tracked for the virtual mouse, not accurate to the system mouse but can be useful for supporting UI stuff.
         public Vector2Int Position;
         /// The position delta accumulated since the last clear.
@@ -31,6 +48,8 @@ public class MultiMouse : MonoBehaviour
         /// State of the left mouse button.
         public Button Left;
     }
+
+    [SerializeField] private float cursorDeltaSpeed;
     
     /// Event called when a virtual mouse gets paired to a physical device.
     /// The passed int is the virtual mouse index (aka player index).
@@ -59,6 +78,9 @@ public class MultiMouse : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(_instance);
+
+        InputUser.onUnpairedDeviceUsed += OnUnpairedDeviceUsed;
+        InputUser.onChange += OnDeviceChanged;
     }
 
     private void Start()
@@ -70,14 +92,19 @@ public class MultiMouse : MonoBehaviour
             for (var i = 0; i < RawInput.Instance.MiceCount; i++)
             {
                 _miceData[i].MouseHandle = (IntPtr)(-1);
+                _miceData[i].Type = MouseData.InputType.None;
             }
         }
     }
 
     private void OnDestroy()
     {
-        if (_instance == this)
-            _instance = null;
+        if (_instance != this)
+            return;
+        
+        _instance = null;
+        InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
+        InputUser.onChange -= OnDeviceChanged;
     }
 
     private void OnEnable()
@@ -85,6 +112,7 @@ public class MultiMouse : MonoBehaviour
         RawInput.Instance.onMouseMotionEvent.AddListener(OnMouseMotion);
         RawInput.Instance.onMouseConnectedEvent.AddListener(OnMouseConnected);
         RawInput.Instance.onMouseDisconnectedEvent.AddListener(OnMouseDisconnected);
+        InputUser.listenForUnpairedDeviceActivity = 2;
     }
     
     private void OnDisable()
@@ -92,6 +120,7 @@ public class MultiMouse : MonoBehaviour
         RawInput.Instance.onMouseMotionEvent.RemoveListener(OnMouseMotion);
         RawInput.Instance.onMouseConnectedEvent.RemoveListener(OnMouseConnected);
         RawInput.Instance.onMouseDisconnectedEvent.RemoveListener(OnMouseDisconnected);
+        InputUser.listenForUnpairedDeviceActivity = 0;
     }
 
     private void Update()
@@ -99,6 +128,26 @@ public class MultiMouse : MonoBehaviour
         while (_spawnedMice.Count > 0)
         {
             onMouseSpawn?.Invoke(_spawnedMice.Pop());
+        }
+
+        lock (_lock)
+        {
+            for (var i = 0; i < RawInput.Instance.MiceCount; i++)
+            {
+                if (_miceData[i].Type != MouseData.InputType.Controller)
+                    continue;
+
+                if (!_miceData[i].DeviceUser.valid)
+                    continue;
+
+                var delta = _miceData[i].JoystickInput.Cursor.MoveDelta.ReadValue<Vector2>() * cursorDeltaSpeed;
+                var intDelta = new Vector2Int(Mathf.RoundToInt(delta.x), -Mathf.RoundToInt(delta.y));
+                _miceData[i].Delta += intDelta;
+                _miceData[i].Position += intDelta;
+                _miceData[i].Left.Held = _miceData[i].JoystickInput.Cursor.Click.IsPressed();
+                _miceData[i].Left.Pressed |= _miceData[i].JoystickInput.Cursor.Click.WasPressedThisFrame();
+                _miceData[i].Left.Released |= _miceData[i].JoystickInput.Cursor.Click.WasReleasedThisFrame();
+            }
         }
     }
 
@@ -158,7 +207,7 @@ public class MultiMouse : MonoBehaviour
 
             if (index < 0 && (input.mouse.buttons.usButtonFlags & Win32.RI_MOUSE_LEFT_BUTTON_DOWN) != 0)
             {
-                index = Array.FindIndex(_miceData, x => x.MouseHandle == (IntPtr)(-1));
+                index = Array.FindIndex(_miceData, x => !IsDevicePaired(x));
                 
                 if (index >= 0)
                 {
@@ -171,6 +220,7 @@ public class MultiMouse : MonoBehaviour
 
             ref var mouse = ref _miceData[index];
             mouse.MouseHandle = input.header.hDevice;
+            mouse.Type = MouseData.InputType.Mouse;
 
             if ((input.mouse.buttons.usButtonFlags & Win32.RI_MOUSE_LEFT_BUTTON_DOWN) != 0)
             {
@@ -223,6 +273,77 @@ public class MultiMouse : MonoBehaviour
 
             ref var mouse = ref _miceData[index];
             mouse.MouseHandle = (IntPtr)(-1);
+            mouse.Type = MouseData.InputType.None;
         }
+    }
+
+    private void OnUnpairedDeviceUsed(InputControl control, InputEventPtr eventPtr)
+    {
+        if (control is not ButtonControl) 
+            return;
+        
+        var index = Array.FindIndex(_miceData, x => !IsDevicePaired(x));
+        if (index < 0)
+            return;
+
+        var user = InputUser.PerformPairingWithDevice(control.device);
+        var userInput = new JoystickInputs();
+
+        if (!userInput.asset.IsUsableWithDevice(control.device))
+        {
+            user.UnpairDevicesAndRemoveUser();
+            return;
+        }
+
+        user.AssociateActionsWithUser(userInput);
+
+        _miceData[index].DeviceUser = user;
+        _miceData[index].JoystickInput = userInput;
+        _miceData[index].Type = MouseData.InputType.Controller;
+
+        userInput.Enable();
+        _spawnedMice.Push(index);
+    }
+    
+    private void OnDeviceChanged(InputUser user, InputUserChange change, InputDevice device)
+    {
+        if (change != InputUserChange.DeviceLost)
+            return;
+
+        lock (_lock)
+        {
+            var index = Array.FindIndex(_miceData, x => x.DeviceUser == user);
+            if (index < 0)
+                return;
+
+            if (!user.valid || !_miceData[index].DeviceUser.valid)
+                return;
+            
+            user.UnpairDevicesAndRemoveUser();
+            _miceData[index].DeviceUser = default;
+            _miceData[index].JoystickInput.Disable();
+            _miceData[index].JoystickInput.Dispose();
+            _miceData[index].JoystickInput = null;
+            _miceData[index].Type = MouseData.InputType.None;
+            onMouseDespawn?.Invoke(index);
+        }
+    }
+
+    public bool IsDevicePaired(MouseData mouseData)
+    {
+        lock (_lock)
+        {
+            switch (mouseData.Type)
+            {
+                case MouseData.InputType.None:
+                    return false;
+                case MouseData.InputType.Mouse:
+                    return mouseData.MouseHandle != (IntPtr)(-1);
+                case MouseData.InputType.Controller:
+                    return mouseData.DeviceUser.valid;
+            }
+        }
+
+        return false;
     }
 }
