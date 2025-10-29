@@ -892,7 +892,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  outputChannel: 0
+  outputChannel: 9
+  sensitivity: 1
 --- !u!65 &220801913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1280,6 +1281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
   outputChannel: 8
+  sensitivity: 1
 --- !u!1 &347324598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1819,6 +1821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
   outputChannel: 9
+  sensitivity: 1
 --- !u!1 &627769240
 GameObject:
   m_ObjectHideFlags: 0
@@ -2504,7 +2507,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  outputChannel: 0
+  outputChannel: 10
+  sensitivity: 1
 --- !u!65 &747315971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5800,7 +5804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ddbbf77f3a4bcfa03bc21557ea2e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchGate
-  type: 2
+  gateType: 2
   inverted: 0
   inputChannels: 0800000009000000
   outputChannel: 11
@@ -5974,7 +5978,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ea368313f84d63b602e8e56a136eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
-  outputChannel: 0
+  outputChannel: 8
+  sensitivity: 1
 --- !u!1 &1463202783
 GameObject:
   m_ObjectHideFlags: 0
@@ -6144,7 +6149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ddbbf77f3a4bcfa03bc21557ea2e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchGate
-  type: 0
+  gateType: 0
   inverted: 0
   inputChannels: 0a0000000b0000000d000000
   outputChannel: 12
@@ -6635,6 +6640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
   outputChannel: 13
+  sensitivity: 1
 --- !u!1001 &1665823438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7576,6 +7582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
   outputChannel: 10
+  sensitivity: 1
 --- !u!1 &2062637430
 GameObject:
   m_ObjectHideFlags: 0

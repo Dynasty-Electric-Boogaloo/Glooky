@@ -156,7 +156,7 @@ public class SwitchManager : MonoBehaviour
             _instance.onSwitchChanged[channel]?.Invoke(channel);
     }
     
-    /// Reset all switches to false.
+    /// Reset all switches.
     public static void ResetSwitches()
     {
         if (!_instance)

@@ -1,10 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
+/// TEST Class
 /// Door behaviour. Can receive channel calls to open.
+//TEST Class do not use.
 public class Door : MonoBehaviour
 {
     /// Channel being listened to.
+    [Tooltip("Channel being listened to.")]
     [SerializeField] private int inputChannel;
     
     private Vector3 _initialPosition;
