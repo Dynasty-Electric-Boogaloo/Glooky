@@ -85,9 +85,6 @@ public class MultiMouse : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(_instance);
-
-        InputUser.onUnpairedDeviceUsed += OnUnpairedDeviceUsed;
-        InputUser.onChange += OnDeviceChanged;
     }
 
     private void Start()
@@ -110,8 +107,6 @@ public class MultiMouse : MonoBehaviour
             return;
         
         _instance = null;
-        InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
-        InputUser.onChange -= OnDeviceChanged;
     }
 
     private void OnEnable()
@@ -119,7 +114,9 @@ public class MultiMouse : MonoBehaviour
         RawInput.Instance.onMouseMotionEvent.AddListener(OnMouseMotion);
         RawInput.Instance.onMouseConnectedEvent.AddListener(OnMouseConnected);
         RawInput.Instance.onMouseDisconnectedEvent.AddListener(OnMouseDisconnected);
-        InputUser.listenForUnpairedDeviceActivity = 2;
+        InputUser.onUnpairedDeviceUsed += OnUnpairedDeviceUsed;
+        InputUser.onChange += OnDeviceChanged;
+        InputUser.listenForUnpairedDeviceActivity = RawInput.Instance.MiceCount;
     }
     
     private void OnDisable()
@@ -127,6 +124,8 @@ public class MultiMouse : MonoBehaviour
         RawInput.Instance.onMouseMotionEvent.RemoveListener(OnMouseMotion);
         RawInput.Instance.onMouseConnectedEvent.RemoveListener(OnMouseConnected);
         RawInput.Instance.onMouseDisconnectedEvent.RemoveListener(OnMouseDisconnected);
+        InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
+        InputUser.onChange -= OnDeviceChanged;
         InputUser.listenForUnpairedDeviceActivity = 0;
     }
 
