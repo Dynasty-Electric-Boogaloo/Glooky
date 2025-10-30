@@ -8,6 +8,7 @@ public class Door : MonoBehaviour
 {
     /// Channel being listened to.
     [Tooltip("Channel being listened to.")]
+    [SceneLabel("", 1f, 0f, 0f, 32)]
     [SerializeField] private int inputChannel;
     
     private Vector3 _initialPosition;

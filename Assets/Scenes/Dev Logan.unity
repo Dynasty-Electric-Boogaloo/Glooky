@@ -1193,6 +1193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f88d42529fb54a43ab319ca65a657166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursorDeltaSpeed: 0
   onMouseSpawn:
     m_PersistentCalls:
       m_Calls: []
@@ -7583,6 +7584,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PressurePlateInteractable
   outputChannel: 10
   sensitivity: 1
+--- !u!1 &1954930341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1954930342}
+  - component: {fileID: 1954930343}
+  m_Layer: 0
+  m_Name: SceneLabelGizmos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1954930342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954930341}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1954930343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954930341}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a8fbe7b24c41648c9ba851c02d41fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneLabelGizmos
 --- !u!1 &2062637430
 GameObject:
   m_ObjectHideFlags: 0
@@ -7812,6 +7857,7 @@ SceneRoots:
   - {fileID: 347324601}
   - {fileID: 401789832}
   - {fileID: 744560966}
+  - {fileID: 1954930342}
   - {fileID: 1241629018}
   - {fileID: 73298408}
   - {fileID: 14090049}
