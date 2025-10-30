@@ -12,6 +12,8 @@ public class SwitchListener : MonoBehaviour
 {
     public UnityEvent<int> onSwitchChanged;
     
+    /// Channel being listened to.
+    [Tooltip("Channel being listened to.")]
     [SerializeField] private int inputChannel;
 
     private void OnEnable()

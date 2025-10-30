@@ -1,12 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
+/// TEST Class
 /// Door behaviour. Can receive channel calls to open.
+//TEST Class do not use.
 public class Door : MonoBehaviour
 {
-    [SerializeField] private int channelListenedTo;
+    /// Channel being listened to.
+    [Tooltip("Channel being listened to.")]
+    [SerializeField] private int inputChannel;
     
-    // temp variable for showcase
     private Vector3 _initialPosition;
     private Vector3 _targetPosition;
     private float _moveSpeed;
@@ -21,7 +24,7 @@ public class Door : MonoBehaviour
     private void FixedUpdate()
     {
         _targetPosition = Vector3.Lerp(_initialPosition, _initialPosition - new Vector3(0, 2f, 0),
-            SwitchManager.GetSwitchFloat(channelListenedTo));
+            SwitchManager.GetSwitchFloat(inputChannel));
         
         UpdatePosition();
     }

@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// Pressure plate behaviour.
 public class PressurePlateInteractable : Interactable
 {
+    /// Channel which is being sent a signal to.
+    [Tooltip("Channel which is being sent a signal to.")]
     [SerializeField] private int outputChannel;
+    /// How sensitive the pressure plate effect is.
+    /// Value can't be 0 or less.
+    /// The smaller the value, the more sensitive it is.
+    [Tooltip("How sensitive the pressure plate effect is. Value can't be 0 or less.")]
+    [Min(1e-07f)]
+    [SerializeField] private float sensitivity = 1f;
     
-    private bool _activated = false;
     private PhysicsController _physicsController;
 
     private void Awake()
@@ -16,8 +21,8 @@ public class PressurePlateInteractable : Interactable
 
         if (!_physicsController)
         {
-            Debug.LogError($"{this.name}: No PhysicsController found");
-            this.enabled = false;
+            Debug.LogError($"{name}: No PhysicsController found");
+            enabled = false;
         }
     }
 
@@ -25,9 +30,11 @@ public class PressurePlateInteractable : Interactable
     {
         CheckPressure();
     }
-
+    
+    /// Set switch float value to output channel.
+    /// The float value depends on how hard the pressure plate is pressed.
     private void CheckPressure()
     {
-        SwitchManager.SetSwitchFloat(outputChannel, _physicsController.GetDistanceFromHoverHeight());
+        SwitchManager.SetSwitchFloat(outputChannel, _physicsController.GetDistanceFromHoverHeight() / sensitivity);
     }
 }
