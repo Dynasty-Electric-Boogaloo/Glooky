@@ -19,7 +19,7 @@ public class CamCenterCurs : MonoBehaviour
     private void FixedUpdate()
     {
         distance = (CursorA.transform.position - CursorB.transform.position)/2;
-        transform.position = CursorA.transform.position - distance/*+new Vector3(-9.1f,11.6f,-14f)*/;
+        transform.position = CursorA.transform.position - distance+new Vector3(1f,11.6f,-13f);
 
 
         var zoom = _curve.Evaluate(distance.sqrMagnitude);

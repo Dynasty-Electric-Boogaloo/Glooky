@@ -26,7 +26,7 @@ public class MovingPlatform : MonoBehaviour
     private void FixedUpdate()
     {
         Debug.Log(SwitchManager.GetSwitch(6));
-        if (SwitchManager.GetSwitch(6) == false) {return;}
+        if (SwitchManager.GetSwitch(channelListenedTo) == false) {return;}
 
         
         _platform.transform.position = Vector3.MoveTowards(_platform.transform.position, _selectPosition, movementSpeed * Time.deltaTime);
