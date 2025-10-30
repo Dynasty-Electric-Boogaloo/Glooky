@@ -5,6 +5,7 @@ public class PressurePlateInteractable : Interactable
 {
     /// Channel which is being sent a signal to.
     [Tooltip("Channel which is being sent a signal to.")]
+    [SceneLabel("", 0f, 1f, 0f, 32)]
     [SerializeField] private int outputChannel;
     /// How sensitive the pressure plate effect is.
     /// Value can't be 0 or less.
