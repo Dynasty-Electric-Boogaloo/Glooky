@@ -557,6 +557,180 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!1 &374563774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 374563776}
+  - component: {fileID: 374563775}
+  - component: {fileID: 374563777}
+  m_Layer: 0
+  m_Name: Spline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &374563775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374563774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineContainer
+  m_Spline:
+    m_EditModeType: 1
+    m_Knots: []
+    m_MetaData: []
+    m_Closed: 0
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Splines:
+  - m_EditModeType: 1
+    m_Knots:
+    - Position:
+        x: -4
+        y: 1.75
+        z: 5.75
+      TangentIn:
+        x: 0
+        y: 0
+        z: -10
+      TangentOut:
+        x: 0
+        y: 0
+        z: 10
+      Rotation:
+        value:
+          x: 0
+          y: -0.70710677
+          z: -0
+          w: 0.70710677
+    - Position:
+        x: -12
+        y: 5
+        z: -4
+      TangentIn:
+        x: -0
+        y: -0
+        z: -3.0832994
+      TangentOut:
+        x: 0
+        y: 0
+        z: 2.839443
+      Rotation:
+        value:
+          x: 0.23655874
+          y: 0.954256
+          z: 0.1827422
+          w: -0.006382786
+    - Position:
+        x: -4
+        y: 8
+        z: -11
+      TangentIn:
+        x: -0
+        y: -0
+        z: -2.5565414
+      TangentOut:
+        x: 0
+        y: 0
+        z: 2.4446287
+      Rotation:
+        value:
+          x: -0.01798889
+          y: 0.69194317
+          z: 0.018670762
+          w: 0.72148633
+    - Position:
+        x: 3
+        y: 6
+        z: -4
+      TangentIn:
+        x: -0
+        y: -0
+        z: -2.776654
+      TangentOut:
+        x: 0
+        y: 0
+        z: 3.1176991
+      Rotation:
+        value:
+          x: 0.17625496
+          y: 0.03411202
+          z: 0.07087357
+          w: 0.98119694
+    m_MetaData:
+    - Mode: 2
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    - Mode: 0
+      Tension: 0.5
+    m_Closed: 1
+    m_IntData:
+      m_Data: []
+    m_FloatData:
+      m_Data: []
+    m_Float4Data:
+      m_Data: []
+    m_ObjectData:
+      m_Data: []
+  m_Knots:
+    m_KnotsLink: []
+--- !u!4 &374563776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374563774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374563777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374563774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351c70f37d334850847de40421bbdfe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SplineTester
+  spline: {fileID: 374563775}
+  block: {fileID: 397000688}
+  stopPoints: []
+  positionEvaluationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &397000683
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,9 +743,8 @@ GameObject:
   - component: {fileID: 397000686}
   - component: {fileID: 397000685}
   - component: {fileID: 397000684}
-  - component: {fileID: 397000689}
   - component: {fileID: 397000688}
-  - component: {fileID: 397000690}
+  - component: {fileID: 397000689}
   m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
@@ -665,26 +838,13 @@ Transform:
   m_GameObject: {fileID: 397000683}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7, y: 1.75, z: 1}
-  m_LocalScale: {x: 3, y: 0.5, z: 3}
+  m_LocalPosition: {x: -13.89, y: 4.18, z: 5.75}
+  m_LocalScale: {x: 5, y: 0.5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &397000688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 397000683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1d2b46bfd945c7817079a6598d611c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  movementSpeed: 18.84954
---- !u!54 &397000689
+--- !u!54 &397000688
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -692,7 +852,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397000683}
   serializedVersion: 5
-  m_Mass: 500
+  m_Mass: 200
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -709,9 +869,9 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 114
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &397000690
+--- !u!114 &397000689
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -720,22 +880,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 397000683}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e50a431a10841879bc9a2a8b8cc02fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a3078e832c747dcb452c1991609b771, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PhysicsController
-  maxSpeed: 3
-  acceleration: 20
-  maxAcceleration: 60
-  gravity: 20
-  hoverHeight: 1.75
-  hoverForce: 500
-  hoverDamper: 20
-  groundCheckRadius: 0.5
-  groundCheckLength: 3
-  airborneCheckLength: 2
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
+  m_EditorClassIdentifier: Assembly-CSharp::SplineFollower
+  track: {fileID: 374563777}
+  speed: 10
+  speedDamper: 50
+  acceleration: 200
+  maxAcceleration: 150
+  hoverForce: 1000
+  hoverDamper: 40
+  trackProgressDistanceThreshold: 1
+  trackProgressSpeed: 10
 --- !u!1 &401789830
 GameObject:
   m_ObjectHideFlags: 0
@@ -2248,10 +2404,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3634784668022756722, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
-      propertyPath: m_Mass
-      value: 80
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2286,7 +2438,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1426145887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3037,3 +3189,4 @@ SceneRoots:
   - {fileID: 473546104}
   - {fileID: 397000687}
   - {fileID: 1426145891}
+  - {fileID: 374563776}
