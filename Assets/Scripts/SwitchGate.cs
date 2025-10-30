@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using TriInspector;
 using UnityEngine;
 
-/// Can be placed on any GameObject to act as a logical gate for switches.
+/// Can and should be placed on an empty GameObject to act as a logical gate for switches.
 /// Takes a list of input channels and sends a signal to the output if conditions are met.
 [HideMonoScript]
+[DisallowMultipleComponent]
 public class SwitchGate : MonoBehaviour
 {
     /// And gate will send the output if all inputs are true.
@@ -88,6 +89,6 @@ public class SwitchGate : MonoBehaviour
             newName += inputChannel + "-";
         newName = newName.TrimEnd('-');
         newName += "_" + outputChannel;
-        this.name = newName;
+        name = newName;
     }
 }
