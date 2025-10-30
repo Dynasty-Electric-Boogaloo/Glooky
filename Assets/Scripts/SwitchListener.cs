@@ -1,9 +1,7 @@
 using System;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
+using TriInspector;
 
 /// Generic class to receive switch calls and handle them.
 /// Prioritize implementing listeners directly in relevant classes instead.

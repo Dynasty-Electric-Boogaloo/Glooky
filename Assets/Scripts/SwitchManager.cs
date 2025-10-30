@@ -1,9 +1,7 @@
 using System;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
+using TriInspector;
 
 /// Singleton component that holds the switch array and handles its calls.
 [HideMonoScript]
