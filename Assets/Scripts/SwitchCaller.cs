@@ -1,9 +1,6 @@
 using System;
-using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
+using TriInspector;
 
 /// TEST CLASS
 /// Only use this class for testing.

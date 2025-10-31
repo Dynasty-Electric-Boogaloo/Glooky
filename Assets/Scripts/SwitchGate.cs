@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using TriInspector;
 using UnityEngine;
+using TriInspector;
 
 /// Can and should be placed on an empty GameObject to act as a logical gate for switches.
 /// Takes a list of input channels and sends a signal to the output if conditions are met.
@@ -20,22 +20,18 @@ public class SwitchGate : MonoBehaviour
     
     /// Switch gate type.
     [Tooltip("Switch gate type.")]
-    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private GateType gateType;
     
     /// Invert this gate's output signal value.
     [Tooltip("Invert this gate's output signal value.")]
-    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private bool inverted;
     
     /// Channels being listened to.
     [Tooltip("Channels being listened to.")]
-    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private List<int> inputChannels;
     
     /// Channel which is being sent a signal to.
     [Tooltip("Channel which is being sent a signal to.")]
-    [OnValueChanged(nameof(UpdateName))]
     [SerializeField] private int outputChannel;
 
     private void OnEnable()
@@ -80,6 +76,14 @@ public class SwitchGate : MonoBehaviour
         SwitchManager.SetSwitch(outputChannel, result);
     }
     
+#if UNITY_EDITOR
+    /// EDITOR TOOL
+    private void OnValidate()
+    {
+        UpdateName();
+    }
+    
+    /// EDITOR TOOL
     /// Internal function to rename the gate's GameObject automatically when properties are changed.
     private void UpdateName()
     {
@@ -91,4 +95,5 @@ public class SwitchGate : MonoBehaviour
         newName += "_" + outputChannel;
         name = newName;
     }
+#endif
 }
