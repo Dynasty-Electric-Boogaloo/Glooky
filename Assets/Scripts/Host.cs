@@ -59,8 +59,9 @@ public class Host : MonoBehaviour, IClickable
     private void Update()
     {
         UpdateAnimator();
+        UpdateInteraction();
 
-        if (_cursor != null)
+        if (_cursor)
             UpdateChainPosition();
     }
 
@@ -122,6 +123,7 @@ public class Host : MonoBehaviour, IClickable
     /// Stop interacting and go back to following the cursor controller.
     public void EndInteraction()
     {
+        _targetInteractable.EndInteraction();
         _targetInteractable = null;
     }
     
@@ -186,9 +188,6 @@ public class Host : MonoBehaviour, IClickable
                 direction = inDiff * followSpeed;
                 direction = Vector3.ClampMagnitude(direction, followMaxSpeed);
             }
-
-            if (diff.magnitude > interactionBreakDistance)
-                EndInteraction();
         }
         else if (diff.magnitude > chainLength)
         {
@@ -200,6 +199,28 @@ public class Host : MonoBehaviour, IClickable
         }
 
         _physicsController.SetMovementDirection(direction);
+    }
+    
+    /// Update the interaction with the _targetInteractable.
+    private void UpdateInteraction()
+    {
+        var diff = Vector3.zero;
+        
+        if (_cursor)
+            diff = _cursor.GetChainEndTransform().position - _rigidbody.position;
+        
+        if (_targetInteractable)
+        {
+            var target = _targetInteractable.GetTargetPoint();
+            var inDiff = target - _rigidbody.position;
+            inDiff.y = 0;
+
+            if (inDiff.magnitude <= 0.2f)
+                _targetInteractable.BeginInteraction();
+
+            if (diff.magnitude > interactionBreakDistance)
+                EndInteraction();
+        }
     }
 
     /// Update the Host model direction based on the difference between the Host and CursorController positions.

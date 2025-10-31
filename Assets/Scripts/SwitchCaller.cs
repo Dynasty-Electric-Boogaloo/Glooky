@@ -1,9 +1,6 @@
 using System;
-using TriInspector;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
+using TriInspector;
 
 /// TEST CLASS
 /// Only use this class for testing.
@@ -11,17 +8,17 @@ using UnityEngine.Serialization;
 [HideMonoScript]
 public class SwitchCaller : MonoBehaviour
 {
-    [SerializeField] private int switchAt;
+    [SerializeField] private int outputChannel;
     
     [Button(ButtonSizes.Large, "Call Switch On")]
     private void OnSwitchOn()
     {
-        SwitchManager.SetSwitch(switchAt, true);
+        SwitchManager.SetSwitch(outputChannel, true);
     }
     
     [Button(ButtonSizes.Large, "Call Switch Off")]
     private void OnSwitchOff()
     {
-        SwitchManager.SetSwitch(switchAt, false);
+        SwitchManager.SetSwitch(outputChannel, false);
     }
 }

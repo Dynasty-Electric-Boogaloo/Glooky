@@ -1,9 +1,7 @@
 using System;
-using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
+using TriInspector;
 
 /// Generic class to receive switch calls and handle them.
 /// Prioritize implementing listeners directly in relevant classes instead.
@@ -12,16 +10,18 @@ public class SwitchListener : MonoBehaviour
 {
     public UnityEvent<int> onSwitchChanged;
     
-    [SerializeField] private int channelListenedTo;
+    /// Channel being listened to.
+    [Tooltip("Channel being listened to.")]
+    [SerializeField] private int inputChannel;
 
     private void OnEnable()
     {
-        SwitchManager.AddListenerOnChannel(OnSwitchChanged, channelListenedTo);
+        SwitchManager.AddListenerOnChannel(OnSwitchChanged, inputChannel);
     }
 
     private void OnDisable()
     {
-        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, channelListenedTo);
+        SwitchManager.RemoveListenerOnChannel(OnSwitchChanged, inputChannel);
     }
     
     /// Trigger the registered callbacks of the onSwitchChanged event.

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 /// Base class for Interactable objects.
-// TODO Implement Host interaction.
 public class Interactable : MonoBehaviour, IClickable
 {
     /// Get the point which the Host will try to get to in order to interact.
@@ -21,6 +20,10 @@ public class Interactable : MonoBehaviour, IClickable
         return true;
     }
 
+    public virtual void BeginInteraction() {}
+    
+    public virtual void EndInteraction() {}
+    
     public ClickableType GetClickableType()
     {
         return ClickableType.Interactable;
