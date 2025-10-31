@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 /// Generic component that allows for creating actors that handle gravity, ground alignment, and directional movement.

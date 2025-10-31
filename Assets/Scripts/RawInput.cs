@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class RawInput : MonoBehaviour
 {
@@ -271,7 +272,7 @@ public class RawInput : MonoBehaviour
             cbSize = Marshal.SizeOf<Win32.WNDCLASSEXW>(),
             lpfnWndProc = Marshal.GetFunctionPointerForDelegate(s_WndProc),
             hInstance = HInstance,
-            lpszClassName = "Mice Raw Input"
+            lpszClassName = $"Mice Raw Input {Random.Range(0, int.MaxValue)}"
         };
 
         var registeredClass = Win32.RegisterClassExW(ref wndClass);
