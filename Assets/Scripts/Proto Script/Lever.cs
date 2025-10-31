@@ -9,11 +9,13 @@ public class Lever : Interactable
     private bool OnOff;
 
     private GameObject _pivot;
+    private Vector3 _startRotation;
     [SerializeField] private AnimationCurve _animationCurve;
     private float time;
 
     private void Awake()
     {
+        _startRotation = transform.localEulerAngles;
         _pivot = this.gameObject.transform.GetChild(0).gameObject;
     }
 
@@ -34,7 +36,7 @@ public class Lever : Interactable
     private void FixedUpdate()
     {
         var value = _animationCurve.Evaluate(time);
-        _pivot.transform.rotation = UnityEngine.Quaternion.Euler(new Vector3(0,0,value));
+        _pivot.transform.rotation = UnityEngine.Quaternion.Euler(new Vector3(0,0,value)+_startRotation);
         if (OnOff)
         {
             time +=Time.deltaTime;
