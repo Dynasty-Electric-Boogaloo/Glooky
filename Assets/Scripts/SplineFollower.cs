@@ -13,13 +13,28 @@ public class SplineFollower : MonoBehaviour
     [SerializeField] private float trackProgressDistanceThreshold;
     [SerializeField] private float trackProgressSpeed;
     
+    [Tooltip("Channel driving movement speed.")]
+    [SerializeField] private int speedChannel;
+    
+    [Tooltip("Channel driving movement direction.")]
+    [SerializeField] private int directionChannel;
+    
     private Rigidbody _rigidbody;
     private Vector3 _targetVelocity;
     private float _factor;
+    private float _speed;
+    private float _direction;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.position = track.GetPosition(_factor);
+    }
+
+    private void Update()
+    {
+        _speed = speedChannel < 0 ? 1 : SwitchManager.GetSwitchFloat(speedChannel);
+        _direction = SwitchManager.GetSwitchFloat(directionChannel) > .5f ? 1 : -1;
     }
 
     private void FixedUpdate()
@@ -43,7 +58,8 @@ public class SplineFollower : MonoBehaviour
     {
         var diff = targetPosition - _rigidbody.position;
         diff.y = 0;
-        var maxSpeed = diff.normalized * speed;
+        
+        var maxSpeed = diff.normalized * (speed * _speed * track.GetSpeedFactor(_factor));
         
         var relVel = _rigidbody.linearVelocity;
         relVel.y = 0;
@@ -58,10 +74,19 @@ public class SplineFollower : MonoBehaviour
     
     private void HandleFactorProgress(Vector3 splinePos)
     {
-        if (Vector3.Distance(splinePos, _rigidbody.position) > trackProgressDistanceThreshold)
-            return;
+        var distance = Vector3.Distance(splinePos, _rigidbody.position);
+        distance /= trackProgressDistanceThreshold;
+        distance = 1 - Mathf.Clamp01(distance);
         
-        _factor += Time.fixedDeltaTime / track.GetLength() * trackProgressSpeed;
-        _factor %= 1f;
+        _factor += Time.fixedDeltaTime / track.GetLength() * trackProgressSpeed * _speed * _direction * distance;
+        _factor = track.ClampProgress(_factor);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position + Vector3.up, trackProgressDistanceThreshold / 2);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(track.GetPosition(_factor) + Vector3.up, trackProgressDistanceThreshold / 2);
     }
 }

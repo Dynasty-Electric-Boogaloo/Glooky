@@ -37,15 +37,20 @@ public class SplineTrack : MonoBehaviour
 
     public Vector3 GetPosition(float time)
     {
-        if (!spline.Spline.Closed)
-        {
-            time *= 2;
-            if (time > 1)
-                time = 2 - time;
-        }
-        
         Vector3 splinePos = spline.Spline.EvaluatePosition(positionEvaluationCurve.Evaluate(time));
         return splinePos + spline.transform.position;
+    }
+
+    public float GetSpeedFactor(float time)
+    {
+        var tangentBegin = positionEvaluationCurve.Evaluate(time - 0.01f);
+        var tangentEnd = positionEvaluationCurve.Evaluate(time + 0.01f);
+        return (tangentEnd - tangentBegin) / 0.02f;
+    }
+
+    public float ClampProgress(float time)
+    {
+        return spline.Spline.Closed ? time % 1 : Mathf.Clamp01(time);
     }
 
     public float GetLength()
@@ -68,11 +73,15 @@ public class SplineTrack : MonoBehaviour
         for (var i = 0; i < spline.Spline.Count; i++)
         {
             var section = spline.Spline.GetCurveLength(i);
+
+            if (i >= spline.Spline.Count - 1)
+                _curveLength += section;
+            
             sections.Add(new SplineSection{distance = _trackLength, value = _curveLength});
 
             var stopDistance = 0f;
             
-            if (i < stopPoints.Length && i == stopPoints[currentStop].splinePoint)
+            if (currentStop < stopPoints.Length && i == stopPoints[currentStop].splinePoint)
             {
                 stopDistance = stopPoints[currentStop].distance;
                 var s = sections[^1];
@@ -84,7 +93,9 @@ public class SplineTrack : MonoBehaviour
             }
             
             _trackLength += section + stopDistance;
-            _curveLength += section;
+            
+            if (i < spline.Spline.Count - 1)
+                _curveLength += section;
         }
 
         var keyCount = sections.Count - (spline.Spline.Closed ? 0 : 1);
@@ -96,12 +107,20 @@ public class SplineTrack : MonoBehaviour
         
         for (var i = 0; i < keyCount; i++)
         {
-            if (!sections[i].flatten)
-                positionEvaluationCurve.SmoothTangents(i, 0);
+            if (sections[i].flatten)
+                continue;
+
+            if (!spline.Spline.Closed && i == 0)
+                continue;
+            
+            positionEvaluationCurve.SmoothTangents(i, 0);
         }
 
         positionEvaluationCurve.AddKey(new Keyframe(1, 1, 0, 0));
-        if (!sections[^1].flatten)
+        if (!sections[^1].flatten && spline.Spline.Closed)
             positionEvaluationCurve.SmoothTangents(keyCount, 0);
+
+        positionEvaluationCurve.preWrapMode = WrapMode.Clamp;
+        positionEvaluationCurve.postWrapMode = WrapMode.Clamp;
     }
 }
