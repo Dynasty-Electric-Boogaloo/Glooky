@@ -2,7 +2,7 @@
 public enum ClickableType
 {
     /// Host object, should be possessable by CursorController.
-    Host, 
+    Host,
     /// Interactable object, should be able to be interacted on by a Host.
     Interactable,
 }
