@@ -8432,6 +8432,7 @@ MonoBehaviour:
   - {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
   - {r: 0.23529413, g: 0.60784316, b: 0.87843144, a: 1}
   - {r: 0.8588236, g: 0.20784315, b: 0.20784315, a: 1}
+  - {r: 0.8083749, g: 0.9528302, b: 0.085395135, a: 1}
 --- !u!1001 &1882458688
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9505,6 +9506,10 @@ PrefabInstance:
     - target: {fileID: 1276674867635883759, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_Name
       value: Host_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1276674867635883759, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3151027163188014420, guid: f1e6098a7c8b09540abc1b37326dcaef, type: 3}
       propertyPath: m_LocalPosition.x
