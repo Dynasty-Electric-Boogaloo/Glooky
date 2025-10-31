@@ -32,7 +32,7 @@ public class Lever : Interactable
         _pivot.localEulerAngles = new Vector3(0, 0, value) + _startRotation;
         if (OnOff)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * 3f;
             if (time >= 1)
             {
                 time = 1;
@@ -40,7 +40,7 @@ public class Lever : Interactable
         }
         else
         {
-            time -= Time.deltaTime;
+            time -= Time.deltaTime * 3f;
             if (time <= 0)
             {
                 time = 0;
