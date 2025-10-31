@@ -35,6 +35,7 @@ public class Host : MonoBehaviour, IClickable
     private float _verticalVelocity;
     private float _timer;
     private Interactable _targetInteractable;
+    private bool _interacting = false;
     
     private void Awake()
     {
@@ -125,6 +126,7 @@ public class Host : MonoBehaviour, IClickable
     {
         _targetInteractable.EndInteraction();
         _targetInteractable = null;
+        _interacting = false;
     }
     
     /// Handle being clicked by a CursorController, effectively beginning the capturing process.
@@ -215,8 +217,11 @@ public class Host : MonoBehaviour, IClickable
             var inDiff = target - _rigidbody.position;
             inDiff.y = 0;
 
-            if (inDiff.magnitude <= 0.2f)
+            if (inDiff.magnitude <= 0.2f && !_interacting)
+            {
+                _interacting = true;
                 _targetInteractable.BeginInteraction();
+            }
 
             if (diff.magnitude > interactionBreakDistance)
                 EndInteraction();

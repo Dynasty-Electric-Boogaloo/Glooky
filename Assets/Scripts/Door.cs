@@ -19,8 +19,10 @@ public class Door : MonoBehaviour
     /// Position of the door when open.
     [Tooltip("Position of the door when open.")]
     [PropertyOrder(4)]
+#if UNITY_EDITOR
     [InfoBox("Move the Door to the desired position and confirm.", visibleIf: nameof(_configuringDoorOpenPosition))]
     [ValidateInput(nameof(IsDoorOpenPositionConfigured))]
+#endif
     [ReadOnly]
     [SerializeField] private Vector3 openPosition;
     
